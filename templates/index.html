@@ -1,8 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
+<body xmlns="http://www.w3.org/1999/html">
 <h1 class="img-fluid">
     <img class="img-fluid" width="1920" src="{{ url_for('static', filename='banner.png') }}" alt="Doctor">
 </h1>
+<div class="row align-items-md-stretch">
+  <div class="col-md-6">
+    <div class="h-100 p-5 bg-light border rounded-3">
+      <h2>Need to book an appointment with a doctor?</h2>
+      <p>Login to book an appointment or Call your local health centre by finding its number <u>here.</u></p>
+      <button class="btn btn-outline-secondary" type="button">Book appointment</button>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="h-100 p-5 bg-light border rounded-3">
+      <h2>Need some medical advice?</h2>
+      <p>Useful links, tools and phone numbers</p>
+      <button class="btn btn-outline-secondary" type="button">Click here</button>
+    </div>
+  </div>
+  <div class="alert alert-warning bg-warning h-50 p-5" role="alert">
+      <h2 class="text-center font-weight-bold text-dark">For COVID-19 Tips and Advice, Click <u>here</u></h2>
+  </div>
+</div>
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <p class="col-md-4 mb-0 text-muted">© 2021 Health Trust, Inc</p>
 
+    <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      <svg class="bi me-2" width="40" height="32"><use>href="#bootstrap"></use></svg>
+    </a>
+
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Accessibility statement</a></li>
+    </ul>
+  </footer>
+</div>
+</body>
 {% endblock %}
