@@ -1,0 +1,159 @@
+# IMPORTS
+from datetime import datetime
+from flask_login import UserMixin
+from sqlalchemy import ForeignKey, MetaData
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+from app import db
+from werkzeug.security import generate_password_hash
+import base64
+from Crypto.Protocol.KDF import scrypt
+from Crypto.Random import get_random_bytes
+from cryptography.fernet import Fernet
+
+# Function to encrypt data
+def encrypt(data, encryption_key):
+    return Fernet(encryption_key).encrypt(bytes(data, 'utf-8'))
+
+mymetadata = MetaData()
+Base = declarative_base(mymetadata)
+
+# Function to decrypt data
+def decrypt(data, encryption_key):
+    return Fernet(encryption_key).decrypt(data).decode('utf-8')
+
+# Class User
+class User(Base, UserMixin):
+    __tablename__ = 'user'
+
+    # User information
+    id = Column(db.Integer, primary_key=True)
+    firstname = Column(db.String(100), nullable=False)
+    lastname = Column(db.String(100), nullable=False)
+    gender = Column(db.String(100), nullable=False)
+    birthdate = Column(db.Date, nullable=False)
+    role = Column(db.String(100), nullable=False, default='patient')
+    nhs_number = Column(db.Integer, nullable=False)
+    phone = Column(db.Integer, nullable=False)
+
+    # User address
+    street = db.Column(db.String(100), nullable=False)
+    postcode = db.Column(db.String(100), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+
+    # User auth information
+    email = db.Column(db.String(100), nullable=False, unique=True)
+    password = db.Column(db.String(100), nullable=False)
+    encryption_key = db.Column(db.String(100), nullable=False)
+
+    # User activity
+    registered_on = db.Column(db.DateTime, nullable=True)
+    last_logged_in = db.Column(db.DateTime, nullable=True)
+    current_logged_in = db.Column(db.DateTime, nullable=True)
+
+    # User constructor
+    def __init__(self, firstname, lastname, gender, birthdate, role, nhs_number, phone, street, postcode, city, email,
+                 password, encryption_key):
+        self.firstname = firstname
+        self.lastname = lastname
+        self.gender = gender
+        self.birthdate = birthdate
+        self.role = role
+        self.nhs_number = nhs_number
+        self.phone = phone
+        self.street = street
+        self.postcode = postcode
+        self.city = city
+        self.email = email
+        # Generating password hash
+        self.password = generate_password_hash(password)
+        self.encryption_key = encryption_key
+        self.registered_on = datetime.now()
+        self.last_logged_in = None
+        self.current_logged_in = None
+
+
+# Class Hospital
+class Hospital(Base):
+    __tablename__ = 'hospital'
+
+    # Hospital info
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable= False)
+
+    # Hospital address
+    street = db.Column(db.String(100), nullable= False)
+    postcode = db.Column(db.String(100), nullable= False)
+    city = db.Column(db.String(100), nullable= False)
+
+    # Hospital constructor
+    def __init__(self, name, street, postcode, city):
+        self.name = name
+        self.street = street
+        self.postcode = postcode
+        self.city = city
+
+
+# Class Appointment
+class Appointmant(Base):
+    __tablename__ = 'appointment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, ForeignKey('User.id'), nullable=False)
+    doctor_id = db.Column(db.Integer, ForeignKey('User.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
+    notes = db.Column(db.String(200))
+    site_id = db.Column(db.Integer, ForeignKey('Hospital.id'), nullable=False)
+
+    # Appointment constructor
+    def __init__(self, patient_id, doctor_id, date, time, notes, site_id):
+        self.patient_id = patient_id
+        self.doctor_id = doctor_id
+        self.date = date
+        self.time = time
+        self.notes = notes
+        self.site_id = site_id
+
+# Class Medicine
+class Medicine(Base):
+    __tablename__ = 'medicine'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable= False)
+    type = db.Column(db.String(100), nullable= False)  # long term or short term
+    dosage = db.Column(db.String(100), nullable= False)
+
+    # Medicine constructor
+    def __init__(self, name, type, dosage):
+        self.name = name
+        self.type = type
+        self.dosage = dosage
+
+# Class Prescription
+class Perscription(Base):
+    __tablename__ = 'prescription'
+
+    id = db.Column(db.Integer, primary_key=True)
+    medicine_id = db.Column(db.Integer, ForeignKey('Medicine.id'), nullable=False)
+    appointment_id = db.Column(db.Integer, ForeignKey('Appointment.id'), nullable=False)
+    instructions = db.Column(db.String(100), nullable= False)
+
+
+
+
+
+# Database initialization script
+def init_db():
+    db.drop_all()
+    db.create_all()
+    user = User(firstname='Jhon', lastname='Smith', gender='male', birthdate='1999-05-09', role='patient',
+                nhs_number='1234567891', phone='6909876712', email='jsmith@email.com', password='123123',
+                encryption_key='asd', street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
+    db.session.add(user)
+    db.session.commit()
+
+
+
+
+
