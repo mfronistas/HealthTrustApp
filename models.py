@@ -11,16 +11,20 @@ from Crypto.Protocol.KDF import scrypt
 from Crypto.Random import get_random_bytes
 from cryptography.fernet import Fernet
 
+
 # Function to encrypt data
 def encrypt(data, encryption_key):
     return Fernet(encryption_key).encrypt(bytes(data, 'utf-8'))
 
+
 mymetadata = MetaData()
 Base = declarative_base(mymetadata)
+
 
 # Function to decrypt data
 def decrypt(data, encryption_key):
     return Fernet(encryption_key).decrypt(data).decode('utf-8')
+
 
 # Class User
 class User(Base, UserMixin):
@@ -79,12 +83,12 @@ class Hospital(Base):
 
     # Hospital info
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable= False)
+    name = db.Column(db.String(100), nullable=False)
 
     # Hospital address
-    street = db.Column(db.String(100), nullable= False)
-    postcode = db.Column(db.String(100), nullable= False)
-    city = db.Column(db.String(100), nullable= False)
+    street = db.Column(db.String(100), nullable=False)
+    postcode = db.Column(db.String(100), nullable=False)
+    city = db.Column(db.String(100), nullable=False)
 
     # Hospital constructor
     def __init__(self, name, street, postcode, city):
@@ -95,7 +99,7 @@ class Hospital(Base):
 
 
 # Class Appointment
-class Appointmant(Base):
+class Appointment(Base):
     __tablename__ = 'appointment'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -115,14 +119,15 @@ class Appointmant(Base):
         self.notes = notes
         self.site_id = site_id
 
+
 # Class Medicine
 class Medicine(Base):
     __tablename__ = 'medicine'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable= False)
-    type = db.Column(db.String(100), nullable= False)  # long term or short term
-    dosage = db.Column(db.String(100), nullable= False)
+    name = db.Column(db.String(100), nullable=False)
+    type = db.Column(db.String(100), nullable=False)  # long term or short term
+    dosage = db.Column(db.String(100), nullable=False)
 
     # Medicine constructor
     def __init__(self, name, type, dosage):
@@ -130,17 +135,20 @@ class Medicine(Base):
         self.type = type
         self.dosage = dosage
 
+
 # Class Prescription
-class Perscription(Base):
+class Prescription(Base):
     __tablename__ = 'prescription'
 
     id = db.Column(db.Integer, primary_key=True)
     medicine_id = db.Column(db.Integer, ForeignKey('Medicine.id'), nullable=False)
     appointment_id = db.Column(db.Integer, ForeignKey('Appointment.id'), nullable=False)
-    instructions = db.Column(db.String(100), nullable= False)
+    instructions = db.Column(db.String(100), nullable=False)
 
-
-
+    def __init__(self, medicine_id, appointment_id, instructions):
+        self.medicine_id = medicine_id
+        self.appointment_id = appointment_id
+        self.instructions = instructions
 
 
 # Database initialization script
@@ -152,8 +160,3 @@ def init_db():
                 encryption_key='asd', street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
     db.session.add(user)
     db.session.commit()
-
-
-
-
-
