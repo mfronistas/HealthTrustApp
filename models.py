@@ -1,5 +1,7 @@
 # IMPORTS
 from datetime import datetime
+
+import pymysql
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey, MetaData
 from sqlalchemy.ext.declarative import declarative_base
@@ -28,7 +30,7 @@ def decrypt(data, encryption_key):
 
 # Class User
 class User(db.Model, UserMixin):
-    __tablename__ = 'user'
+    __tablename__ = 'User'
 
     # User information
     id = Column(db.Integer, primary_key=True)
@@ -79,7 +81,7 @@ class User(db.Model, UserMixin):
 
 # Class Hospital
 class Hospital(db.Model):
-    __tablename__ = 'hospital'
+    __tablename__ = 'Hospital'
 
     # Hospital info
     id = db.Column(db.Integer, primary_key=True)
@@ -100,7 +102,7 @@ class Hospital(db.Model):
 
 # Class Appointment
 class Appointment(db.Model):
-    __tablename__ = 'appointment'
+    __tablename__ = 'Appointment'
 
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, ForeignKey('User.id'), nullable=False)
@@ -122,7 +124,7 @@ class Appointment(db.Model):
 
 # Class Medicine
 class Medicine(db.Model):
-    __tablename__ = 'medicine'
+    __tablename__ = 'Medicine'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -138,7 +140,7 @@ class Medicine(db.Model):
 
 # Class Prescription
 class Prescription(db.Model):
-    __tablename__ = 'prescription'
+    __tablename__ = 'Prescription'
 
     id = db.Column(db.Integer, primary_key=True)
     medicine_id = db.Column(db.Integer, ForeignKey('Medicine.id'), nullable=False)
@@ -153,9 +155,10 @@ class Prescription(db.Model):
 
 # Database initialization script
 def init_db():
+    pymysql.install_as_MySQLdb()
     db.drop_all()
     db.create_all()
-    user = User(firstname='Jhon', lastname='Smith', gender='male', birthdate='1999-05-09', role='patient',
+    user = User(firstname='John', lastname='Smith', gender='male', birthdate='1999-05-09', role='patient',
                 nhs_number='1234567891', phone='6909876712', email='jsmith@email.com', password='123123',
                 encryption_key='asd', street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
     db.session.add(user)
