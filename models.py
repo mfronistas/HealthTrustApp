@@ -27,7 +27,7 @@ def decrypt(data, encryption_key):
 
 
 # Class User
-class User(Base, UserMixin):
+class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     # User information
@@ -78,7 +78,7 @@ class User(Base, UserMixin):
 
 
 # Class Hospital
-class Hospital(Base):
+class Hospital(db.Model):
     __tablename__ = 'hospital'
 
     # Hospital info
@@ -99,7 +99,7 @@ class Hospital(Base):
 
 
 # Class Appointment
-class Appointment(Base):
+class Appointment(db.Model):
     __tablename__ = 'appointment'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -121,7 +121,7 @@ class Appointment(Base):
 
 
 # Class Medicine
-class Medicine(Base):
+class Medicine(db.Model):
     __tablename__ = 'medicine'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -137,7 +137,7 @@ class Medicine(Base):
 
 
 # Class Prescription
-class Prescription(Base):
+class Prescription(db.Model):
     __tablename__ = 'prescription'
 
     id = db.Column(db.Integer, primary_key=True)
