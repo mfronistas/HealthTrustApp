@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+<h1 class="p-3 text-center">Register an Account</h1>
+</head>
+<body>
+<form class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:800px;">
+<div class="col-md-5">
+    <label for="inputFirstName" class="form-label">First Name</label>
+    <input type="text" class="form-control" aria-label="First Name">
+</div>
+<div class="col-md-1"></div>
+<div class="col-md-5">
+    <label for="inputLastName" class="form-label">Last Name</label>
+    <input type="text" class="form-control" aria-label="Last Name">
+</div>
+
+<div class="col-md-3">
+    <label for="inputGender" class="form-label">Gender</label>
+    <select id="inputGender" class="form-select">
+        <option selected></option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+    </select>
+</div>
+<div class="col-md-3"></div>
+<div class="col-md-3">
+    <label for="inputDateOfBirth" class="form-label">Date of Birth</label>
+    <input type="date" class="form-control" aria-label="Date of Birth">
+</div>
+<div class="col-md-6">
+    <label for="inputPhoneNumber" class="form-label">Phone No.</label>
+    <input type="text" class="form-control" aria-label="Phone Number">
+</div>
+<div class="col-md-6">
+    <label for="inputNhsNumber" class="form-label">NHS Number</label>
+    <input type="text" class="form-control" aria-label="NHS Number">
+</div>
+<div class="col-md-5">
+    <label for="inputAddressLine1" class="form-label">Address Line 1</label>
+    <input type="text" class="form-control" aria-label="Address Line 1">
+</div>
+<div class="col-md-3">
+    <label for="inputPostcode" class="form-label">Postcode</label>
+    <input type="text" class="form-control" aria-label="Postcode">
+</div>
+<div class="col-md-4">
+    <label for="inputCity" class="form-label">City/Town</label>
+    <input type="text" class="form-control" aria-label="City/Town">
+</div>
+<div class="col-md-6">
+    <label for="inputEmailAddress" class="form-label">Email Address</label>
+    <input type="text" class="form-control" aria-label="Email Address">
+</div>
+<div class="col-md-6"></div>
+<div class="col-md-5">
+    <label for="inputPassword" class="form-label">Password</label>
+    <input type="text" class="form-control" aria-label="Password">
+</div>
+<div class="col-md-1"></div>
+<div class="col-md-5">
+    <label for="inputConfirmPassword" class="form-label">Confirm Password</label>
+    <input type="text" class="form-control" aria-label="Confirm Password">
+</div>
+    <button type="submit" class="mx-auto btn bg-primary text-white" >Register</button>
+</form>
+
+<div class="p-3 mx-auto text-center text-white" style="width:450px">
+    <div class="h-100 p-5 bg-primary border rounded-3">
+      <h4>Already Have An Account?</h4>
+      <button class="btn bg-white text-primary" type="button">Login Now</button>
+    </div>
+</div>
+</body>
+{% endblock %}
