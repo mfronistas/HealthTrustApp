@@ -1,6 +1,6 @@
 # IMPORTS
 from datetime import datetime
-
+from app import requires_roles
 import pymysql
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey, MetaData
@@ -17,6 +17,11 @@ from cryptography.fernet import Fernet
 # Function to encrypt data
 def encrypt(data, encryption_key):
     return Fernet(encryption_key).encrypt(bytes(data, 'utf-8'))
+
+# Function that generates encryption key
+def generate_key():
+    key = Fernet.generate_key()
+    return key
 
 
 mymetadata = MetaData()
@@ -39,7 +44,7 @@ class User(db.Model, UserMixin):
     gender = Column(db.String(100), nullable=False)
     birthdate = Column(db.Date, nullable=False)
     role = Column(db.String(100), nullable=False, default='patient')
-    nhs_number = Column(db.Integer, nullable=False)
+    nhs_number = Column(db.Integer, nullable=True)
     phone = Column(db.Integer, nullable=False)
 
     # User address
@@ -158,8 +163,12 @@ def init_db():
     pymysql.install_as_MySQLdb()
     db.drop_all()
     db.create_all()
-    user = User(firstname='John', lastname='Smith', gender='male', birthdate='1999-05-09', role='patient',
+    patient = User(firstname='John', lastname='Smith', gender='male', birthdate='1999-05-09', role='patient',
                 nhs_number='1234567891', phone='6909876712', email='jsmith@email.com', password='123123',
-                encryption_key='asd', street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
-    db.session.add(user)
+                encryption_key=generate_key(), street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
+    doctor = User(firstname='Mathew', lastname='Anderson', gender='Male', birthdate='1998-03-04', role='doctor',
+                  nhs_number=None, phone='8909887890', email='manderson@hospital.com', password='77887788',
+                  encryption_key=generate_key(), street='North 29', postcode='NE78RE', city='Newcastle')
+    db.session.add(patient)
+    db.session.add(doctor)
     db.session.commit()
