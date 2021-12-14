@@ -4,7 +4,7 @@ from functools import wraps
 from flask_login import LoginManager, current_user
 
 # Opening file to get database URL
-f = open('databaseURL.txt', 'r')
+f = open('databaseURI.txt', 'r')
 
 # Function for custom decorator for roles
 def requires_roles(*roles):
@@ -36,5 +36,24 @@ if __name__ == '__main__':
     login_manager = LoginManager()
     login_manager.login_view = 'users.login'
     login_manager.init_app(app)
+
+    login_manager = LoginManager()
+    login_manager.login_view = 'users.login'
+    login_manager.init_app(app)
+
+    from models import User
+
+
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
+
+
+    # BLUEPRINTS
+    # import blueprints
+    from users.views import users_blueprint
+
+    # register blueprints with app
+    app.register_blueprint(users_blueprint)
 
     app.run(debug=True)
