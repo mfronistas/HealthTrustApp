@@ -4,7 +4,7 @@ from functools import wraps
 from flask_login import LoginManager, current_user
 
 # Opening file to get database URL
-f = open('databaseURI.txt', 'r')
+f = open('databaseURL.txt', 'r')
 
 # Function for custom decorator for roles
 def requires_roles(*roles):
