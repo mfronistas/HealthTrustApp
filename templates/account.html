@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+<div class="card p-2 mb-4 mx-auto bg-light border-primary border rounded-3" style="width:1000px">
+      <div class="container p-5 py-5">
+        <div class="column is-6 is-offset-3">
+            <h2 class="title fw-bold">Your Account</h2>
+            <div class="box">
+                <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Email</th>
+                        <th>{{ email }}</th>
+                    </tr>
+                    <tr>
+                        <th>First Name</th>
+                        <th>{{ firstname }}</th>
+                    </tr>
+                    <tr>
+                        <th>Last Name</th>
+                        <th>{{ lastname }}</th>
+                    </tr>
+                    <tr>
+                        <th>Phone No.</th>
+                        <th>{{ phone }}</th>
+                    </tr>
+                    <tr>
+                        <th>Gender</th>
+                        <th>{{ gender }}</th>
+                    </tr>
+                    <tr>
+                        <th>Birthdate</th>
+                        <th>{{ birthdate }}</th>
+                    </tr>
+                    <tr>
+                        <th>NHS Number</th>
+                        <th>{{ nhs_number }}</th>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <th>{{ street, postcode, city }}</th>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+</div>
+</body>
+{% endblock %}
