@@ -65,3 +65,15 @@ class LoginForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Email()])
     password = PasswordField(validators=[InputRequired()])
     submit = SubmitField()
+
+
+# APPOINTMENT FORM
+class AppointmentForm(FlaskForm):
+    # TODO Might be drop down box instead, patient will also be completed automatically -> see appointments.views
+    patient = StringField(validators=[InputRequired()])
+    doctor = StringField(validators=[InputRequired()])
+    date = StringField(validators=[InputRequired()])
+    time = StringField(validators=[InputRequired()])
+    notes = StringField(validators=[InputRequired()])
+    site = StringField(validators=[InputRequired()])
+
