@@ -15,13 +15,13 @@ appointment_blueprint = Blueprint('appointment', __name__, template_folder='temp
 
 # Might not be needed
 @appointment_blueprint.route('/appointment')
-#@login_required
+@login_required
 def appointment():
-    return render_template('view_appointment.html')
+    return render_template('book.html')
 
 
 @appointment_blueprint.route('/book_appointment', methods=['POST'])
-#@login_required
+@login_required
 def book_appointment():
     form = AppointmentForm
     if current_user.role == 'patient':
@@ -32,7 +32,7 @@ def book_appointment():
         db.session.add(new_appointment)
         db.session.commit()
         # TODO Create template view appointments or route page where user can see appointments
-        return render_template(url_for('book.html'))
+        return render_template(url_for('view_appointments.html'))
 
     # TODO complete receptionist booking
     if current_user.role == 'reception':
@@ -43,4 +43,4 @@ def book_appointment():
         db.session.add(new_appointment)
         db.session.commit()
         # TODO Create template view appointments or route page where user can see appointments
-        return render_template(url_for('book.html'))
+        return render_template(url_for('view_appointments.html'))
