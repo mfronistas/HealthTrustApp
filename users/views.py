@@ -9,7 +9,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request,
 from flask_login import current_user, login_user, logout_user, login_required
 
 from app import db, requires_roles
-from models import User
+from models import User, generate_key
 from users.forms import RegisterForm, LoginForm
 
 # CONFIG
@@ -39,7 +39,7 @@ def register():
                         lastname=form.lastname.data,
                         gender=form.gender.data,
                         birthdate=form.birthdate.data,
-                        role=form.role.data,
+                        role='patient',
                         nhs_number=form.nhs_number.data,
                         phone=form.phone.data,
                         street=form.street.data,
