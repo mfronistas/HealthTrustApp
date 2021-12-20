@@ -58,9 +58,7 @@ if __name__ == '__main__':
     login_manager.login_view = 'users.login'
     login_manager.init_app(app)
 
-    login_manager = LoginManager()
-    login_manager.login_view = 'users.login'
-    login_manager.init_app(app)
+
 
     from models import User
 
