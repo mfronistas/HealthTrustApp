@@ -32,7 +32,7 @@ def book_appointment():
         db.session.add(new_appointment)
         db.session.commit()
         # TODO Create template view appointments or route page where user can see appointments
-        return render_template(url_for('view_appointments.html'))
+        return render_template(url_for('book.html'))
 
     # TODO complete receptionist booking
     if current_user.role == 'reception':
