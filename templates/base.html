@@ -19,25 +19,31 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mx-auto mb-2 mb-lg-0 margin-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
             </li>
+          {% if current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link active" href="#">Login</a>
+              <a class="nav-link active" href="{{ url_for('users.login') }}">Login</a>
             </li>
+          {% endif %}
+          {% if not current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link active" href="#">Register</a>
+              <a class="nav-link active" href="{{ url_for('users.register') }}">Register</a>
             </li>
+          {% endif %}
+              {% if current_user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 My Account
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Book Appointment</a></li>
-                <li><a class="dropdown-item" href="#">View/Cancel Appointments</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('appointment.book_appointment') }}">Book Appointment</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('appointment.appointment') }}">View/Cancel Appointments</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Account Information</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('users.account') }}">Account Information</a></li>
               </ul>
             </li>
+              {% endif %}
             <li class="nav-item">
               <a class="nav-link active" href="#">Contact Us</a>
             </li>
@@ -58,7 +64,7 @@
         </a>
 
         <ul class="nav col-md-4 justify-content-end">
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+          <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link px-2 text-muted">Home</a></li>
           <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
           <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
           <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Accessibility statement</a></li>

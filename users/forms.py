@@ -16,10 +16,8 @@ def char_validation(form, field):
 def phone_validation(form, field):
     phonenumber = field.data
     number_amount = number_checker(phonenumber)
-    if len(phonenumber) < 13 or number_amount != 11:
+    if number_amount != 11:
         raise ValidationError(f"Phone number is incorrect")
-    if phonenumber[4] != '-' or phonenumber[8] != '-':
-        raise ValidationError(f"Phone number must be entered in a XXXX-XXX-XXXX format.")
 
 
 # check the amount of numbers in a string

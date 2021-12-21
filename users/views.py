@@ -57,6 +57,7 @@ def register():
         # sends user to login page
         return redirect(url_for('users.login'))
     # if request method is GET or form not valid re-render signup page
+    flash('Oops sth went wrong')
     return render_template('register.html', form=form)
 
 
@@ -80,7 +81,7 @@ def login():
         db.session.add(user)
         db.session.commit()
 
-
+    return render_template('login.html', form=form)
 
 
 # logout the current user
