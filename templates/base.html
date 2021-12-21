@@ -21,7 +21,7 @@
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
             </li>
-          {% if current_user.is_authenticated %}
+          {% if not current_user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('users.login') }}">Login</a>
             </li>
@@ -31,7 +31,7 @@
               <a class="nav-link active" href="{{ url_for('users.register') }}">Register</a>
             </li>
           {% endif %}
-              {% if current_user.is_authenticated %}
+              {% if not current_user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 My Account
