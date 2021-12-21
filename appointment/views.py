@@ -9,6 +9,7 @@ from users.forms import AppointmentForm
 
 appointment_blueprint = Blueprint('appointment', __name__, template_folder='templates')
 
+
 # VIEWS
 # View appointment page
 
