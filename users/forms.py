@@ -36,8 +36,8 @@ class RegisterForm(FlaskForm):
     lastname = StringField(validators=[InputRequired(), char_validation])
     gender = StringField(validators=[InputRequired()])
     birthdate = StringField(validators=[InputRequired(), DataRequired()])
-    nhs_number = StringField(validators=[InputRequired(), Length(min=12, max=12,
-                                                                 message="NHS number must contain 12 numbers")])
+    nhs_number = StringField(validators=[InputRequired(), Length(min=10, max=10,
+                                                                 message="NHS number must contain 10 numbers")])
     phone = StringField(validators=[InputRequired(), phone_validation])
     street = StringField(validators=[InputRequired()])
     postcode = StringField(validators=[InputRequired()])
