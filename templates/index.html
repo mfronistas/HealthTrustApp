@@ -9,19 +9,19 @@
   <div class="col-md-6">
     <div class="h-100 p-5 bg-success border text-white">
       <h2>Need to book an appointment with a doctor?</h2>
-      <p>Login to book an appointment or Call your local health centre by finding its number <a href="#" class="'alert-link text-white">Here.</a></p>
-      <a class="btn btn-outline-secondary bg-light text-dark" role="button" href="{{ url_for('appointment.book_appointment') }}">Book appointment</a>
+      <p>Login to book an appointment or Call your local health centre.</p>
+      <a class="btn btn-outline-secondary" href="{{ url_for('users.login') }}">Book appointment</a>
     </div>
   </div>
   <div class="col-md-6">
     <div class="h-100 p-5 bg-success border text-white">
       <h2>Need some medical advice?</h2>
       <p>Useful links, tools and phone numbers</p>
-      <a class="btn btn-outline-secondary bg-light text-dark" role="button" href="#">Click here</a>
+      <a class="btn btn-outline-secondary" href="https://www.nhs.uk/" target="_blank">Click here</a>
     </div>
   </div>
-  <div class="alert alert-warning bg-warning h-50 p-5 alert-width topper-margin" role="alert">
-      <h2 class="text-center font-weight-bold text-dark">For COVID-19 Tips and Advice, Click <a href="{{ url_for('users.covid') }}" class="'alert-link">Here</a></h2>
+  <div class="alert alert-warning bg-warning h-50 p-5 alert-width" role="alert">
+      <h2 class="text-center font-weight-bold text-dark">For COVID-19 Tips and Advice, Click <a href="https://www.nhs.uk/conditions/coronavirus-covid-19/" class="'alert-link" target="_blank" >Here</a></h2>
   </div>
 </div>
 </body>
