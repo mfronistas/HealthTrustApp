@@ -6,6 +6,10 @@
     margin-bottom: 5px;
 }
 
+.top-margin{
+    margin-top: 5px;
+}
+
 body {
   font-family: 'ABeeZee', sans-serif;
   min-height: 75rem;
