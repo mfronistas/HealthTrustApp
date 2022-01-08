@@ -1,4 +1,6 @@
 import re
+from appointment.views import timeslots
+import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import Email, ValidationError, Length, EqualTo, InputRequired, DataRequired
@@ -28,6 +30,14 @@ def number_checker(number):
         if char in possible_numbers:
             current_amount += 1
     return current_amount
+
+
+# Check if timeslot is valid
+def timeslot_validation(form, timeslot):
+    times = timeslots()
+
+    if timeslot not in times:
+        raise ValidationError("The time chosen is not in a valid timeslot")
 
 
 # REGISTER FORM    TODO: check if fields have all the specific restrictions they require
@@ -66,12 +76,11 @@ class LoginForm(FlaskForm):
 
 
 # APPOINTMENT FORM
+# Todo check a speficic date, get all times from appointments in that date and then remove the existing
 class AppointmentForm(FlaskForm):
-    # TODO Might be drop down box instead, patient will also be completed automatically -> see appointments.views
     patient = StringField(validators=[InputRequired()])
     doctor = StringField(validators=[InputRequired()])
     date = StringField(validators=[InputRequired()])
-    time = StringField(validators=[InputRequired()])
+    time = StringField(validators=[InputRequired(), timeslot_validation])
     notes = StringField(validators=[InputRequired()])
     site = StringField(validators=[InputRequired()])
-
