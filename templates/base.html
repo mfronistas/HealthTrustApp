@@ -46,7 +46,7 @@
             </li>
               {% endif %}
             <li class="nav-item">
-              <a class="nav-link active" href="#">Contact Us</a>
+              <a class="nav-link active" href="{{ url_for('users.contact') }}">Contact Us</a>
             </li>
             <button class="btn bg-white text-primary" type="button">Logout</button>
           </ul>
@@ -67,9 +67,9 @@
 
         <ul class="nav col-md-4 justify-content-end">
           <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link px-2 text-white">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-white">About</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-white">Accessibility statement</a></li>
+          <li class="nav-item"><a href="{{ url_for('users.faqs') }}" class="nav-link px-2 text-white">FAQs</a></li>
+          <li class="nav-item"><a href="{{ url_for('users.aboutus') }}" class="nav-link px-2 text-white">About</a></li>
+          <li class="nav-item"><a href="{{ url_for('users.accessibility') }}" class="nav-link px-2 text-white">Accessibility statement</a></li>
         </ul>
       </footer>
     </body>

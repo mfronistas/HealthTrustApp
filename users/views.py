@@ -107,3 +107,28 @@ def account():
                            postcode=current_user.postcode.data,
                            city=current_user.city.data,
                            email=current_user.email.data)
+
+
+@users_blueprint.route('/covid')
+def covid():
+    return render_template('covid.html')
+
+
+@users_blueprint.route('/aboutus')
+def aboutus():
+    return render_template('aboutus.html')
+
+
+@users_blueprint.route('/faqs')
+def faqs():
+    return render_template('faqs.html')
+
+
+@users_blueprint.route('/accessibility')
+def accessibility():
+    return render_template('accessibility.html')
+
+
+@users_blueprint.route('/contact')
+def contact():
+    return render_template('contact.html')
