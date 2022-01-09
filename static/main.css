@@ -10,6 +10,14 @@
     margin-top: 5px;
 }
 
+.topper-margin{
+    margin-top: 10px;
+}
+
+.padding{
+    padding: 13px;
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
   min-height: 75rem;

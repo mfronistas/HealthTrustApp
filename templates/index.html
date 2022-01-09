@@ -5,22 +5,22 @@
 <div class="img-fluid">
     <img class="img-fluid" width="1920" src="{{ url_for('static', filename='banner.png') }}" alt="Doctor">
 </div>
-<div class="row align-items-md-stretch">
+<div class="row align-items-md-stretch padding">
   <div class="col-md-6">
-    <div class="h-100 p-5 bg-light border rounded-3">
+    <div class="h-100 p-5 bg-success border text-white">
       <h2>Need to book an appointment with a doctor?</h2>
-      <p>Login to book an appointment or Call your local health centre by finding its number <a href="#" class="'alert-link">Here.</a></p>
-      <a class="btn btn-outline-secondary" role="button" href="{{ url_for('appointment.book_appointment') }}">Book appointment</a>
+      <p>Login to book an appointment or Call your local health centre by finding its number <a href="#" class="'alert-link text-white">Here.</a></p>
+      <a class="btn btn-outline-secondary bg-light text-dark" role="button" href="{{ url_for('appointment.book_appointment') }}">Book appointment</a>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="h-100 p-5 bg-light border rounded-3">
+    <div class="h-100 p-5 bg-success border text-white">
       <h2>Need some medical advice?</h2>
       <p>Useful links, tools and phone numbers</p>
-      <button class="btn btn-outline-secondary" type="button">Click here</button>
+      <a class="btn btn-outline-secondary bg-light text-dark" role="button" href="#">Click here</a>
     </div>
   </div>
-  <div class="alert alert-warning bg-warning h-50 p-5 alert-width" role="alert">
+  <div class="alert alert-warning bg-warning h-50 p-5 alert-width topper-margin" role="alert">
       <h2 class="text-center font-weight-bold text-dark">For COVID-19 Tips and Advice, Click <a href="{{ url_for('users.covid') }}" class="'alert-link">Here</a></h2>
   </div>
 </div>
