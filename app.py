@@ -23,7 +23,7 @@ def requires_roles(*roles):
 f = open('databaseURL.txt', 'r')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f.readline()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///healthtrust.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
 db = SQLAlchemy(app)
