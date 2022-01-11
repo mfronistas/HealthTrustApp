@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request,
 import datetime
 from app import db, requires_roles
 from flask_login import login_required, current_user
-from models import Appointment
+from models import Appointment, User, Hospital
 # CONFIG
 from users.forms import AppointmentForm
 
@@ -18,7 +18,10 @@ appointment_blueprint = Blueprint('appointment', __name__, template_folder='temp
 @appointment_blueprint.route('/appointment')
 @login_required
 def appointment():
-    return render_template('appointments.html')
+    return render_template('appointments.html',
+                           appointments=Appointment.query.filter_by(patient_id=current_user.id),
+                           doctors=User.query.filter_by(role='doctor'),
+                           hospitals=Hospital.query.all())
 
 
 @appointment_blueprint.route('/book_appointment', methods=['POST', 'GET'])
