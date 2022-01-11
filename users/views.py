@@ -58,7 +58,6 @@ def register():
         # sends user to login page
         return redirect(url_for('users.login'))
     # if request method is GET or form not valid re-render signup page
-    flash('Oops sth went wrong')
     return render_template('register.html', form=form)
 
 
@@ -73,7 +72,7 @@ def login():
 
         if not user or not check_password_hash(user.password, form.password.data):
             flash('Incorrect login')
-        return render_template('login.html', form=form)
+            return render_template('login.html', form=form)
 
         login_user(user)
 
