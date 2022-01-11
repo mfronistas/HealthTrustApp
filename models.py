@@ -1,7 +1,6 @@
 # IMPORTS
 from datetime import datetime
 from app import requires_roles
-import pymysql
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey, MetaData
 from sqlalchemy.ext.declarative import declarative_base
@@ -161,7 +160,6 @@ class Prescription(db.Model):
 
 # Database initialization script
 def init_db():
-    pymysql.install_as_MySQLdb()
     db.drop_all()
     db.create_all()
     patient = User(firstname='John', lastname='Smith', gender='male', birthdate=datetime(1999,5,9), role='patient',

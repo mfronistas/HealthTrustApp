@@ -35,7 +35,7 @@
               <a class="nav-link active" href="{{ url_for('users.register') }}">Register</a>
             </li>
           {% endif %}
-              {% if current_user.is_authenticated %}
+              {% if not current_user.is_authenticated %}
             <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 My Account
@@ -51,9 +51,7 @@
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('users.contact') }}">Contact Us</a>
             </li>
-          {% if current_user.is_authenticated %}
-            <button class="btn bg-white text-primary" type="button">Logout</button>
-          {% endif %}
+            <a class="btn bg-white text-primary" href="{{ url_for("users.logout") }}">Logout</a>
           </ul>
         </div>
       </div>
