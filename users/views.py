@@ -62,7 +62,7 @@ def register():
 
 
 # Login user
-@users_blueprint.route('/login', methods=['GET', 'POST'])
+@users_blueprint.route('/login', methods=['POST', 'GET'])
 def login():
     form = LoginForm()
 
@@ -74,12 +74,14 @@ def login():
             flash('Incorrect login')
             return render_template('login.html', form=form)
 
+
         login_user(user)
 
         user.current_logged_in = datetime.now()
         user.last_logged_in = user.current_logged_in
         db.session.add(user)
         db.session.commit()
+        return render_template('account.html')
 
     return render_template('login.html', form=form)
 
@@ -97,16 +99,16 @@ def logout():
 @login_required
 def account():
     return render_template('account.html',
-                           firstname=current_user.firstname.data,
-                           lastname=current_user.lastname.data,
-                           gender=current_user.gender.data,
-                           birthdate=current_user.birthdate.data,
-                           nhs_number=current_user.nhs_number.data,
-                           phone=current_user.phone.data,
-                           street=current_user.street.data,
-                           postcode=current_user.postcode.data,
-                           city=current_user.city.data,
-                           email=current_user.email.data)
+                           firstname=current_user.firstname,
+                           lastname=current_user.lastname,
+                           gender=current_user.gender,
+                           birthdate=current_user.birthdate,
+                           nhs_number=current_user.nhs_number,
+                           phone=current_user.phone,
+                           street=current_user.street,
+                           postcode=current_user.postcode,
+                           city=current_user.city,
+                           email=current_user.email)
 
 
 @users_blueprint.route('/covid')
