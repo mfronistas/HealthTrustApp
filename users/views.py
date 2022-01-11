@@ -28,11 +28,16 @@ def register():
     # if request method is POST or form is valid
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        # if this returns a user, then the email already exists in database
+        nhsNr = User.query.filter_by(nhs_number=form.nhs_number.data).first()
+        # if this returns a user, then the email or NHS number already exists in database
 
-        # if email already exists redirect user back to signup page with error message so user can try again
+        # if email or NHS number already exists redirect user
+        # back to signup page with error message so user can try again
         if user:
             flash('Email address already exists')
+            return render_template('register.html', form=form)
+        if nhsNr:
+            flash('This NHS number has already been used')
             return render_template('register.html', form=form)
 
         # create a new user with the form data
@@ -81,7 +86,7 @@ def login():
         user.last_logged_in = user.current_logged_in
         db.session.add(user)
         db.session.commit()
-        return render_template('account.html')
+        return redirect(url_for('users.account'))
 
     return render_template('login.html', form=form)
 
