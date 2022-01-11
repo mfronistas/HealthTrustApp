@@ -9,8 +9,13 @@
   <div class="col-md-6">
     <div class="h-100 p-5 bg-success border text-white">
       <h2>Need to book an appointment with a doctor?</h2>
-      <p>Login to book an appointment or Call your local health centre by finding its number <a href="#" class="'alert-link text-white">Here.</a></p>
-      <a class="btn btn-outline-secondary bg-light text-dark" role="button" href="{{ url_for('appointment.book_appointment') }}">Book appointment</a>
+      <p>Login to book an appointment or Call your local health centre</p>
+        {% if current_user.is_authenticated %}
+        <a class="btn btn-outline-secondary bg-light text-dark" role="button" href="{{ url_for('appointment.book_appointment') }}">Book appointment</a>
+        {% endif %}
+        {% if not current_user.is_authenticated %}
+        <a class="btn btn-outline-secondary bg-light text-dark" role="button" href="{{ url_for('users.login') }}">Book appointment</a>
+        {% endif %}
     </div>
   </div>
   <div class="col-md-6">
