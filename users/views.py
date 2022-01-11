@@ -21,6 +21,7 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 # view registration
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
+
     # create signup form object
     form = RegisterForm()
 

@@ -1,6 +1,6 @@
 import re
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, DateField
 from wtforms.validators import Email, ValidationError, Length, EqualTo, InputRequired, DataRequired
 
 
@@ -35,7 +35,7 @@ class RegisterForm(FlaskForm):
     firstname = StringField(validators=[InputRequired(), char_validation])
     lastname = StringField(validators=[InputRequired(), char_validation])
     gender = StringField(validators=[InputRequired()])
-    birthdate = StringField(validators=[InputRequired(), DataRequired()])
+    birthdate = DateField(validators=[InputRequired(), DataRequired()])
     nhs_number = StringField(validators=[InputRequired(), Length(min=10, max=10,
                                                                  message="NHS number must contain 10 numbers")])
     phone = StringField(validators=[InputRequired(), phone_validation])
