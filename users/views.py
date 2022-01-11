@@ -84,6 +84,11 @@ def login():
     return render_template('login.html', form=form)
 
 
+@users_blueprint.route('/contactus')
+def contact_us():
+    return render_template('aboutus.html')
+
+
 # logout the current user
 @users_blueprint.route('/logout')
 @login_required

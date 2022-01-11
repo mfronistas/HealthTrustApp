@@ -64,12 +64,12 @@
         <div class="col-md-6"></div>
         <div class="col-md-5">
             <label for="inputPassword" class="form-label">Password</label>
-            <input type="text" class="form-control" aria-label="Password">
+            <input type="password" class="form-control" aria-label="Password">
         </div>
         <div class="col-md-1"></div>
         <div class="col-md-5">
             <label for="inputConfirmPassword" class="form-label">Confirm Password</label>
-            <input type="text" class="form-control" aria-label="Confirm Password">
+            <input type="password" class="form-control" aria-label="Confirm Password">
         </div>
             <button type="submit" class="mx-auto btn bg-primary text-white" >Register</button>
     </form>
@@ -77,7 +77,7 @@
     <div class="p-3 mx-auto text-center text-white" style="width:450px">
         <div class="h-100 p-5 bg-primary border rounded-3">
           <h4>Already Have An Account?</h4>
-          <a class="btn bg-white text-primary" role="button" href="{{ url_for('users.login') }}">Login Now</a>
+          <a class="btn bg-white text-primary" href="{{ url_for('users.login') }}" >Login Now</a>
         </div>
     </div>
 </body>
