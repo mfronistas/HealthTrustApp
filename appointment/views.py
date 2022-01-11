@@ -16,7 +16,7 @@ appointment_blueprint = Blueprint('appointment', __name__, template_folder='temp
 
 # Might not be needed
 @appointment_blueprint.route('/appointment')
-#@login_required
+@login_required
 def appointment():
     return render_template('appointments.html')
 
