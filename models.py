@@ -1,9 +1,7 @@
 # IMPORTS
 from datetime import datetime
-from app import requires_roles
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey, MetaData
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 from app import db
 from werkzeug.security import generate_password_hash
@@ -22,10 +20,6 @@ def encrypt(data, encryption_key):
 def generate_key():
     key = Fernet.generate_key()
     return key
-
-
-mymetadata = MetaData()
-Base = declarative_base(mymetadata)
 
 
 # Function to decrypt data

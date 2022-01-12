@@ -1,3 +1,4 @@
+# IMPORTS
 from flask import Flask, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
@@ -18,9 +19,6 @@ def requires_roles(*roles):
 
     return wrapper
 
-
-# Opening file to get database URL
-f = open('databaseURL.txt', 'r')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///healthtrust.db'
