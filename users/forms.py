@@ -69,8 +69,10 @@ class LoginForm(FlaskForm):
 # APPOINTMENT FORM
 class AppointmentForm(FlaskForm):
     date = DateField(validators=[InputRequired()])
-    time = TimeField(validators=[InputRequired()])
-    site = StringField(validators=[InputRequired()])
+    time = TimeField()
+    #site = StringField(validators=[InputRequired()])
+
+    submit = SubmitField()
 
     # Check that appointment isnt in the past
     def validate_date(form, field):

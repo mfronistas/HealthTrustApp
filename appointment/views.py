@@ -1,7 +1,7 @@
 # File that includes the functions of appointment
 # IMPORTS
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
-import datetime
+import datetime, time
 from app import db, requires_roles
 from flask_login import login_required, current_user
 from models import Appointment, User, Hospital
@@ -29,14 +29,18 @@ def appointment():
 def book_appointment():
     # Get all hospitals from database to add them to dropdown list in html page
     hospitals = Hospital.query.all()
-
+    displaySlotList = False
+    times = timeslots()
     # create appointment form object
     form = AppointmentForm()
-
+    x = request.form.get('location')
+    site = Hospital.query.filter_by(name=x).first()
     # if request method is POST or form is valid
     if form.validate_on_submit():
         # Get all appointments in the current date
-        times = timeslots()
+        print(x)
+        print("form is valid")
+        displaySlotList = True
         appointment = Appointment.query.filter_by(date=form.date.data)
         # if time found is in
         for i in appointment:
@@ -54,10 +58,10 @@ def book_appointment():
             # if user is patient use his current id to book appointment
             if current_user.role == 'patient':
                 # Notes equals to pending to show that appointment hasnt been completed yet
-                new_appointment = Appointment(patient_id=current_user.id, doctor_id=findDoctor(form.date.date,
-                                                                                                 form.time.date),
+                new_appointment = Appointment(patient_id=current_user.id, doctor_id=findDoctor(form.date.data,
+                                                                                                 form.time.data),
                                               date=form.date.data,
-                                              time=form.time.data, notes='pending', site_id=form.site.data)
+                                              time=form.time.data, notes='pending', site_id=site.id)
 
                 # add appointment to database
                 db.session.add(new_appointment)
@@ -68,7 +72,7 @@ def book_appointment():
         else:
             flash('Time already booked')
     # if request method is GET or form not valid re-render booking page
-    return render_template('book.html', form=form, hospitals=hospitals)
+    return render_template('book.html', form=form, hospitals=hospitals, slotList=displaySlotList, timeslots=times)
 
 
 # Method to create timeslots and add them to a list
@@ -87,6 +91,7 @@ def timeslots() -> list:
 
     return slots
 
+
 # Method to find available doctor and assign him to appointment
 def findDoctor(date, time) -> User:
     # Get all doctors from the database
@@ -96,7 +101,7 @@ def findDoctor(date, time) -> User:
         # get all appointments for specific doctor for specific time and date
         appointments = Appointment.query.filter_by(doctor_id=doctor.id, date= date, time=time)
         # if appointments is empty means that no such appointment was found
-        if appointments == []:
+        if not appointments:
             return doctor
 
 
