@@ -29,7 +29,6 @@ def appointment():
 def book_appointment():
     # Get all hospitals from database to add them to dropdown list in html page
     hospitals = Hospital.query.all()
-    displaySlotList = False
     times = timeslots()
     # create appointment form object
     form = AppointmentForm()
@@ -40,40 +39,23 @@ def book_appointment():
         # Get all appointments in the current date
         print(x)
         print("form is valid")
-        displaySlotList = True
-        appointment = Appointment.query.filter_by(date=form.date.data)
+        appointment = Appointment.query.filter_by(date=form.date.data).all()
         # if time found is in
+        # TODO: Check for hospitals
         for i in appointment:
             if i.time in times:
-                times.remove(i)
+                times.remove(i.time)
 
         # if no slots remain in the list
-        if times == '':
+        if not times:
             flash('Current date is fully booked')
-            return render_template('book.html', form=form)
+            return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
+        return render_template('book.html', form=form, hospitals=hospitals, slotList=True, timeslots=times)
 
-        # if entered time not in times remaining, means that the time is already booked
-        if form.time.data not in times:
-
-            # if user is patient use his current id to book appointment
-            if current_user.role == 'patient':
-                # Notes equals to pending to show that appointment hasnt been completed yet
-                new_appointment = Appointment(patient_id=current_user.id, doctor_id=findDoctor(form.date.data,
-                                                                                                 form.time.data),
-                                              date=form.date.data,
-                                              time=form.time.data, notes='pending', site_id=site.id)
-
-                # add appointment to database
-                db.session.add(new_appointment)
-                db.session.commit()
-                # if new appointment is successfully added return appointments page
-                return render_template(url_for('appointments.html'))
-
-        else:
-            flash('Time already booked')
     # if request method is GET or form not valid re-render booking page
-    return render_template('book.html', form=form, hospitals=hospitals, slotList=displaySlotList, timeslots=times)
+    return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
 
+# TODO: Create a method to create a new appointment
 
 # Method to create timeslots and add them to a list
 def timeslots() -> list:
@@ -86,7 +68,7 @@ def timeslots() -> list:
     time = datetime.datetime.strptime(start_time, '%H:%M')
     end = datetime.datetime.strptime(end_time, '%H:%M')
     while time <= end:
-        slots.append(time.strftime("%H:%M"))
+        slots.append(time.time())
         time += datetime.timedelta(minutes=slot_time)
 
     return slots

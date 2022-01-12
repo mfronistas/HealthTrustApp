@@ -26,6 +26,22 @@
 
     {{ form.submit(class="mx-auto btn bg-primary text-white")}}
 
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, error in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-warning" role="alert">
+            {% else %}
+              <div class="alert alert-warning" role="alert">
+            {% endif %}
+              {{ error }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+
 {% if slotList %}
 <div class="card border-primary border mx-auto" style="width:1500px;">
 <table class="table">
@@ -37,7 +53,7 @@
   <tbody>
    {% for slot in timeslots %}
         <tr>
-            <td> timeslots[slot] </td>
+            <td> {{slot}} </td>
             <td><button type="button" class="btn btn-primary">Book</button></td>
         </tr>
    {% endfor %}

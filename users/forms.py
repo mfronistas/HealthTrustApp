@@ -70,7 +70,6 @@ class LoginForm(FlaskForm):
 class AppointmentForm(FlaskForm):
     date = DateField(validators=[InputRequired()])
     time = TimeField()
-    #site = StringField(validators=[InputRequired()])
 
     submit = SubmitField()
 
