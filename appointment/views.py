@@ -27,6 +27,9 @@ def appointment():
 @appointment_blueprint.route('/book_appointment', methods=['POST', 'GET'])
 @login_required
 def book_appointment():
+    # Get all hospitals from database to add them to dropdown list in html page
+    hospitals = Hospital.query.all()
+
     # create appointment form object
     form = AppointmentForm()
 
@@ -50,27 +53,22 @@ def book_appointment():
 
             # if user is patient use his current id to book appointment
             if current_user.role == 'patient':
-                new_appointment = Appointment(patient_id=current_user.id, doctor_id=form.doctor.data, date=form.date.data,
-                                              time=form.time.data, notes=form.notes.data, site_id=form.site.data)
+                # Notes equals to pending to show that appointment hasnt been completed yet
+                new_appointment = Appointment(patient_id=current_user.id, doctor_id=findDoctor(form.date.date,
+                                                                                                 form.time.date),
+                                              date=form.date.data,
+                                              time=form.time.data, notes='pending', site_id=form.site.data)
 
                 # add appointment to database
                 db.session.add(new_appointment)
                 db.session.commit()
-                return render_template(url_for('book.html'))
+                # if new appointment is successfully added return appointments page
+                return render_template(url_for('appointments.html'))
 
-            # If user is a receptionist choose a user from the list to get his id
-            if current_user.role == 'reception':
-                new_appointment = Appointment(patient_id=form.patient.data, doctor_id=form.doctor.data, date=form.date.data,
-                                              time=form.time.data, notes=form.notes.data, site_id=form.site.data)
-
-                # add appointment to database
-                db.session.add(new_appointment)
-                db.session.commit()
-                return render_template(url_for('book.html'))
         else:
             flash('Time already booked')
     # if request method is GET or form not valid re-render booking page
-    return render_template('book.html', form=form)
+    return render_template('book.html', form=form, hospitals=hospitals)
 
 
 # Method to create timeslots and add them to a list
@@ -88,3 +86,18 @@ def timeslots() -> list:
         time += datetime.timedelta(minutes=slot_time)
 
     return slots
+
+# Method to find available doctor and assign him to appointment
+def findDoctor(date, time) -> User:
+    # Get all doctors from the database
+    doctors = User.query.filter_by(role='doctor').all()
+    # check all doctors
+    for doctor in doctors:
+        # get all appointments for specific doctor for specific time and date
+        appointments = Appointment.query.filter_by(doctor_id=doctor.id, date= date, time=time)
+        # if appointments is empty means that no such appointment was found
+        if appointments == []:
+            return doctor
+
+
+
