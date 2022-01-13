@@ -77,7 +77,7 @@ class AppointmentForm(FlaskForm):
 
     # Check that appointment isnt in the past
     def validate_date(form, field):
-        if form.date.data < date.today():
+        if form.date.data <= date.today():
             raise ValidationError("Please choose a valid date")
 
 class DoctorForm(FlaskForm):
@@ -91,3 +91,10 @@ class DoctorForm(FlaskForm):
         u'Gender Type',
         choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], validators=[InputRequired()])
     birthdate = DateField(validators=[InputRequired(), DataRequired()])
+    phone = StringField(validators=[InputRequired(), phone_validation])
+
+    def validate_password(self, password):
+        p = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
+        if not p.match(self.password.data):
+            raise ValidationError(message="Password must contain at least 1 small letter,"
+                                          " 1 capital letter, 1 digit and 1 special character.")
