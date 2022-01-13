@@ -93,7 +93,7 @@ def login():
 
 @users_blueprint.route('/contactus')
 def contact_us():
-    return render_template('aboutus.html')
+    return render_template('contact.html')
 
 
 # logout the current user
