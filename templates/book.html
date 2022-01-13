@@ -2,27 +2,65 @@
 
 {% block content %}
 <head>
-<h1 class="p-3 text-center">Book Appointment</h1>
+<h1 class="p-3 text-center">Book a new Appointment</h1>
 </head>
 <body>
-<form class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:800px;">
+<form method="POST" action= "{{ url_for('appointment.book_appointment') }}" class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:800px;">
+{{ form.csrf_token() }}
 <div class="col-md-2"></div>
 <div class="col-md-4">
-    <label for="locations">Choose a location:</label>
+    <label for="hospital">Choose a location:</label>
 
+<!--- Get hospitals and add them to a drop down list   --->
     <select name="location" id="location">
-      <option value="Newcastle Centre GP">Newcastle Centre GP</option>
-      <option value="South Shields GP">South Shields GP</option>
-      <option value="Jesmond GP">Jesmond GP</option>
-      <option value="Heaton GP">Heaton GP</option>
+        {% for i in hospitals %}
+      <option value="{{ i.name }}">{{ i.name }}
+      </option>
+        {% endfor %}
     </select>
 </div>
 <div class="col-md-4">
     <label for="inputDate" class="form-label">Date of Appointment</label>
-    <input type="date" class="form-control" aria-label="Date appointment">
+    {{ form.date(type="date" ,class="form-control", placeholder="Date") }}
 </div>
 
-    <button type="submit" class="mx-auto btn bg-primary text-white" >Book</button>
+    {{ form.submit(class="mx-auto btn bg-primary text-white")}}
+
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, error in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-warning" role="alert">
+            {% else %}
+              <div class="alert alert-warning" role="alert">
+            {% endif %}
+              {{ error }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+
+{% if slotList %}
+<div class="card border-primary border mx-auto" style="width:1500px;">
+<table class="table">
+  <thead>
+    <tr>
+        <th scope="col">Time</th>
+    </tr>
+  </thead>
+  <tbody>
+   {% for slot in timeslots %}
+        <tr>
+            <td> {{slot}} </td>
+            <td><button type="button" class="btn btn-primary">Book</button></td>
+        </tr>
+   {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
 </form>
 
 </body>

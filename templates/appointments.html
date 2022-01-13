@@ -9,27 +9,34 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">Date</th>
-      <th scope="col">Time</th>
-      <th scope="col">Notes</th>
+        <th scope="col">#</th>
+        <th scope="col">Date</th>
+        <th scope="col">Time</th>
+        <th scope="col">Hospital</th>
+        <th scope="col">Doc</th>
+        <th scope="col">Notes</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>21/12/2021</td>
-      <td>12:00</td>
-      <td>Been feeling sick for about a week now, every tablet I've tried hasn't worked. There is alot of text here to see how the table handles it. Even more text is here to test this blah blah blah.</td>
-      <td><button type="button" class="btn btn-primary">Cancel</button></td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>23/12/2021</td>
-      <td>15:00</td>
-      <td>I have an eating disorder help.</td>
-      <td><button type="button" class="btn btn-primary">Cancel</button></td>
-    </tr>
+    {% for appointment in appointments %}
+        <tr>
+            <th scope="row">{{ appointment.id }}</th>
+            <td>{{ appointment.date }}</td>
+            <td>{{ appointment.time}}</td>
+            {% for hospital in hospitals %}
+                {% if hospital.id == appointment.site_id %}
+                    <td>{{ hospital.name }}</td>
+                {% endif %}
+            {% endfor %}
+            {% for doc in doctors %}
+                {% if doc.id == appointment.doctor_id %}
+                    <td>Dr {{ doc.lastname }}</td>
+                {% endif %}
+            {% endfor %}
+            <td>{{ appointment.notes }}</td>
+            <td><button type="button" class="btn btn-primary">View</button></td>
+        </tr>
+    {% endfor %}
   </tbody>
 </table>
 </div>

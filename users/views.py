@@ -21,17 +21,23 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 # view registration
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
+
     # create signup form object
     form = RegisterForm()
 
     # if request method is POST or form is valid
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        # if this returns a user, then the email already exists in database
+        nhsNr = User.query.filter_by(nhs_number=form.nhs_number.data).first()
+        # if this returns a user, then the email or NHS number already exists in database
 
-        # if email already exists redirect user back to signup page with error message so user can try again
+        # if email or NHS number already exists redirect user
+        # back to signup page with error message so user can try again
         if user:
             flash('Email address already exists')
+            return render_template('register.html', form=form)
+        if nhsNr:
+            flash('This NHS number has already been used')
             return render_template('register.html', form=form)
 
         # create a new user with the form data
@@ -57,12 +63,11 @@ def register():
         # sends user to login page
         return redirect(url_for('users.login'))
     # if request method is GET or form not valid re-render signup page
-    flash('Oops sth went wrong')
     return render_template('register.html', form=form)
 
 
 # Login user
-@users_blueprint.route('/login', methods=['GET', 'POST'])
+@users_blueprint.route('/login', methods=['POST', 'GET'])
 def login():
     form = LoginForm()
 
@@ -72,7 +77,8 @@ def login():
 
         if not user or not check_password_hash(user.password, form.password.data):
             flash('Incorrect login')
-        return render_template('login.html', form=form)
+            return render_template('login.html', form=form)
+
 
         login_user(user)
 
@@ -80,6 +86,7 @@ def login():
         user.last_logged_in = user.current_logged_in
         db.session.add(user)
         db.session.commit()
+        return redirect(url_for('users.account'))
 
     return render_template('login.html', form=form)
 
@@ -102,16 +109,16 @@ def logout():
 @login_required
 def account():
     return render_template('account.html',
-                           firstname=current_user.firstname.data,
-                           lastname=current_user.lastname.data,
-                           gender=current_user.gender.data,
-                           birthdate=current_user.birthdate.data,
-                           nhs_number=current_user.nhs_number.data,
-                           phone=current_user.phone.data,
-                           street=current_user.street.data,
-                           postcode=current_user.postcode.data,
-                           city=current_user.city.data,
-                           email=current_user.email.data)
+                           firstname=current_user.firstname,
+                           lastname=current_user.lastname,
+                           gender=current_user.gender,
+                           birthdate=current_user.birthdate,
+                           nhs_number=current_user.nhs_number,
+                           phone=current_user.phone,
+                           street=current_user.street,
+                           postcode=current_user.postcode,
+                           city=current_user.city,
+                           email=current_user.email)
 
 
 @users_blueprint.route('/covid')
