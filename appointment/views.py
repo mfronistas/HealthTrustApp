@@ -48,6 +48,7 @@ def book_appointment():
     n = request.form.get('book')
 
     if form.validate_on_submit():
+        print('inform' , n)
         # Get all appointments in the current date
         appointment = Appointment.query.filter_by(date=form.date.data).all()
         # if time found is in
@@ -60,12 +61,13 @@ def book_appointment():
         if not times:
             flash('Current date is fully booked')
 
-        if n:
+        if n is not None:
             n = datetime.datetime.strptime(n, '%H:%M:%S')
             n = n.time()
-            new_appointment = Appointment(current_user.id, 2,
+            new_appointment = Appointment(current_user.id, findDoctor(form.date.data, n).id,
                                           form.date.data, n, notes='pending', site_id=site.id)
             db.session.add(new_appointment)
+            print('success')
             db.session.commit()
 
             return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
@@ -73,6 +75,7 @@ def book_appointment():
 
     # if request method is GET or form not valid re-render booking page
     return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
+
 
 # Method to create timeslots and add them to a list
 def timeslots() -> list:
@@ -98,10 +101,7 @@ def findDoctor(date, time) -> User:
     # check all doctors
     for doctor in doctors:
         # get all appointments for specific doctor for specific time and date
-        appointments = Appointment.query.filter_by(doctor_id=doctor.id, date= date, time=time)
+        appointments = Appointment.query.filter_by(doctor_id=doctor.id, date= date, time=time).all()
         # if appointments is empty means that no such appointment was found
-        if not appointments:
+        if appointments == []:
             return doctor
-
-
-
