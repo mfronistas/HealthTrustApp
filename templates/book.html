@@ -7,25 +7,27 @@
 <body>
 <form method="POST" action= "{{ url_for('appointment.book_appointment') }}" class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:800px;">
 {{ form.csrf_token() }}
-<div class="col-md-2"></div>
-<div class="col-md-4">
+<div class="mx-auto"></div>
+<div class="row mb-3 mx-auto" style="width:400px">
     <label for="hospital">Choose a location:</label>
 
 <!--- Get hospitals and add them to a drop down list   --->
-    <select name="location" id="location">
+    <select name="location" id="location" class="form-select">
         {% for i in hospitals %}
       <option value="{{ i.name }}">{{ i.name }}
       </option>
         {% endfor %}
     </select>
 </div>
-<div class="col-md-4">
+<div class="row mx-auto" style="width:400px"></div>
+<div class="row mb-3 mx-auto" style="width:400px">
     <label for="inputDate" class="form-label">Date of Appointment</label>
     {{ form.date(type="date" ,class="form-control", placeholder="Date") }}
 </div>
-
+    <div class="row mb-3"></div>
+<div class="row mx-auto" style="width:200px">
     {{ form.submit(class="mx-auto btn bg-primary text-white")}}
-
+</div>
 <div>
   {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -59,6 +61,7 @@
    {% endfor %}
   </tbody>
 </table>
+</div>
 </div>
 {% endif %}
 </form>
