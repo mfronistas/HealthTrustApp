@@ -1,7 +1,8 @@
 # File that includes the functions of appointment
 # IMPORTS
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
-import datetime, time
+import datetime
+from datetime import time
 from app import db, requires_roles
 from flask_login import login_required, current_user
 from models import Appointment, User, Hospital
@@ -16,12 +17,21 @@ appointment_blueprint = Blueprint('appointment', __name__, template_folder='temp
 
 # Might not be needed
 @appointment_blueprint.route('/appointment')
+@requires_roles('doctor', 'patient')
 @login_required
 def appointment():
-    return render_template('appointments.html',
-                           appointments=Appointment.query.filter_by(patient_id=current_user.id),
-                           doctors=User.query.filter_by(role='doctor'),
-                           hospitals=Hospital.query.all())
+    if current_user.role == 'patient':
+        return render_template('appointments.html',
+                               appointments=Appointment.query.filter_by(patient_id=current_user.id)
+                               .order_by(Appointment.date.asc(), Appointment.time.asc()),
+                               doctors=User.query.filter_by(role='doctor'),
+                               hospitals=Hospital.query.all())
+    elif current_user.role == 'doctor':
+        return render_template('appointments.html',
+                               appointments=Appointment.query.filter_by(doctor_id=current_user.id)
+                               .order_by(Appointment.date.asc(), Appointment.time.asc()),
+                               doctors=User.query.filter_by(role='doctor'),
+                               hospitals=Hospital.query.all())
 
 
 @appointment_blueprint.route('/book_appointment', methods=['POST', 'GET'])
@@ -34,28 +44,35 @@ def book_appointment():
     form = AppointmentForm()
     x = request.form.get('location')
     site = Hospital.query.filter_by(name=x).first()
-    # if request method is POST or form is valid
+    # Time of appointment
+    n = request.form.get('book')
+
     if form.validate_on_submit():
         # Get all appointments in the current date
-        print(x)
-        print("form is valid")
         appointment = Appointment.query.filter_by(date=form.date.data).all()
         # if time found is in
-        # TODO: Check for hospitals
         for i in appointment:
-            if i.time in times:
-                times.remove(i.time)
+            if i.site_id == site.id:
+                if i.time in times:
+                    times.remove(i.time)
 
         # if no slots remain in the list
         if not times:
             flash('Current date is fully booked')
+
+        if n:
+            n = datetime.datetime.strptime(n, '%H:%M:%S')
+            n = n.time()
+            new_appointment = Appointment(current_user.id, 2,
+                                          form.date.data, n, notes='pending', site_id=site.id)
+            db.session.add(new_appointment)
+            db.session.commit()
+
             return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
         return render_template('book.html', form=form, hospitals=hospitals, slotList=True, timeslots=times)
 
     # if request method is GET or form not valid re-render booking page
     return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
-
-# TODO: Create a method to create a new appointment
 
 # Method to create timeslots and add them to a list
 def timeslots() -> list:
