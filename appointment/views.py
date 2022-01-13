@@ -37,12 +37,9 @@ def book_appointment():
     site = Hospital.query.filter_by(name=x).first()
     # Time of appointment
     n = request.form.get('book')
-    print(n, "timeslot")
 
     if form.validate_on_submit():
         # Get all appointments in the current date
-        print(x)
-        print("form is valid")
         appointment = Appointment.query.filter_by(date=form.date.data).all()
         # if time found is in
         # TODO: Check for hospitals
@@ -54,13 +51,12 @@ def book_appointment():
         if not times:
             flash('Current date is fully booked')
 
-        if n != '':
-            n = int(n)
-            time(n)
+        if n:
+            n = datetime.datetime.strptime(n, '%H:%M:%S')
+            n = n.time()
             new_appointment = Appointment(current_user.id, 2,
                                           form.date.data, n, notes='pending', site_id=site.id)
             db.session.add(new_appointment)
-            print("success")
             db.session.commit()
 
             return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)

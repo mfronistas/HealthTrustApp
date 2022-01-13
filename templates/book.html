@@ -54,7 +54,7 @@
    {% for slot in timeslots %}
         <tr>
             <td>{{slot}} </td>
-            <td><form action="" method="POST" >
+            <td><form action="{{ url_for('appointment.book_appointment') }}" method="POST" >
                 <button class="btn btn-danger" type="submit" name="book" value={{ slot }}>
                     <span class="glyphicon glyphicon-trash"></span> Book</button> </form></td>
 
