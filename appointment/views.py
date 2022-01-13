@@ -17,12 +17,21 @@ appointment_blueprint = Blueprint('appointment', __name__, template_folder='temp
 
 # Might not be needed
 @appointment_blueprint.route('/appointment')
+@requires_roles('doctor', 'patient')
 @login_required
 def appointment():
-    return render_template('appointments.html',
-                           appointments=Appointment.query.filter_by(patient_id=current_user.id),
-                           doctors=User.query.filter_by(role='doctor'),
-                           hospitals=Hospital.query.all())
+    if current_user.role == 'patient':
+        return render_template('appointments.html',
+                               appointments=Appointment.query.filter_by(patient_id=current_user.id)
+                               .order_by(Appointment.date.asc(), Appointment.time.asc()),
+                               doctors=User.query.filter_by(role='doctor'),
+                               hospitals=Hospital.query.all())
+    elif current_user.role == 'doctor':
+        return render_template('appointments.html',
+                               appointments=Appointment.query.filter_by(doctor_id=current_user.id)
+                               .order_by(Appointment.date.asc(), Appointment.time.asc()),
+                               doctors=User.query.filter_by(role='doctor'),
+                               hospitals=Hospital.query.all())
 
 
 @appointment_blueprint.route('/book_appointment', methods=['POST', 'GET'])
@@ -42,10 +51,10 @@ def book_appointment():
         # Get all appointments in the current date
         appointment = Appointment.query.filter_by(date=form.date.data).all()
         # if time found is in
-        # TODO: Check for hospitals
         for i in appointment:
-            if i.time in times:
-                times.remove(i.time)
+            if i.site_id == site.id:
+                if i.time in times:
+                    times.remove(i.time)
 
         # if no slots remain in the list
         if not times:
@@ -64,8 +73,6 @@ def book_appointment():
 
     # if request method is GET or form not valid re-render booking page
     return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
-
-# TODO: Create a method to create a new appointment
 
 # Method to create timeslots and add them to a list
 def timeslots() -> list:
