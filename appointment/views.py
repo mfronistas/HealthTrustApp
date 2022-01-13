@@ -1,7 +1,8 @@
 # File that includes the functions of appointment
 # IMPORTS
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
-import datetime, time
+import datetime
+from datetime import time
 from app import db, requires_roles
 from flask_login import login_required, current_user
 from models import Appointment, User, Hospital
@@ -34,7 +35,10 @@ def book_appointment():
     form = AppointmentForm()
     x = request.form.get('location')
     site = Hospital.query.filter_by(name=x).first()
-    # if request method is POST or form is valid
+    # Time of appointment
+    n = request.form.get('book')
+    print(n, "timeslot")
+
     if form.validate_on_submit():
         # Get all appointments in the current date
         print(x)
@@ -49,6 +53,16 @@ def book_appointment():
         # if no slots remain in the list
         if not times:
             flash('Current date is fully booked')
+
+        if n != '':
+            n = int(n)
+            time(n)
+            new_appointment = Appointment(current_user.id, 2,
+                                          form.date.data, n, notes='pending', site_id=site.id)
+            db.session.add(new_appointment)
+            print("success")
+            db.session.commit()
+
             return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
         return render_template('book.html', form=form, hospitals=hospitals, slotList=True, timeslots=times)
 
