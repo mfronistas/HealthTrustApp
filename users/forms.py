@@ -31,7 +31,7 @@ def number_checker(number):
     return current_amount
 
 
-# REGISTER FORM    TODO: check if fields have all the specific restrictions they require
+# REGISTER FORM
 class RegisterForm(FlaskForm):
     firstname = StringField(validators=[InputRequired(), char_validation])
     lastname = StringField(validators=[InputRequired(), char_validation])
@@ -80,4 +80,14 @@ class AppointmentForm(FlaskForm):
         if form.date.data < date.today():
             raise ValidationError("Please choose a valid date")
 
-
+class DoctorForm(FlaskForm):
+    firstname = StringField(validators=[InputRequired(), char_validation])
+    lastname = StringField(validators=[InputRequired(), char_validation])
+    email = StringField(validators=[InputRequired(), Email()])
+    password = PasswordField(validators=[InputRequired(),
+                                         Length(min=6, max=12,
+                                                message="Password must be between 6 and 12 characters long.")])
+    gender = SelectField(
+        u'Gender Type',
+        choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], validators=[InputRequired()])
+    birthdate = DateField(validators=[InputRequired(), DataRequired()])
