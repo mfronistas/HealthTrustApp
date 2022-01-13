@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, date
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, DateField, TimeField
+from wtforms import StringField, SubmitField, PasswordField, DateField, TimeField, SelectField
 from wtforms.validators import Email, ValidationError, Length, EqualTo, InputRequired, DataRequired
 
 
@@ -35,7 +35,9 @@ def number_checker(number):
 class RegisterForm(FlaskForm):
     firstname = StringField(validators=[InputRequired(), char_validation])
     lastname = StringField(validators=[InputRequired(), char_validation])
-    gender = StringField(validators=[InputRequired()])
+    gender = SelectField(
+        u'Gender Type',
+        choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], validators=[InputRequired()])
     birthdate = DateField(validators=[InputRequired(), DataRequired()])
     nhs_number = StringField(validators=[InputRequired(), Length(min=10, max=10,
                                                                  message="NHS number must contain 10 numbers")])

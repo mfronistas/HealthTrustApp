@@ -47,7 +47,7 @@
         </div>
         <div class="col-md-3">
             <label for="inputGender" class="form-label">Gender</label>
-            {{ form.gender(type="text" ,class="form-control", placeholder="Gender") }}
+            {{ form.gender(class="form-select", placeholder="Gender") }}
             {% for error in form.gender.errors %}
                 {{ error }}
             {% endfor %}
