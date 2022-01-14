@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+    <h1 class="p-3 text-center">Add Hospital</h1>
+</head>
+<body>
+    <form method="POST" class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:800px;">
+    {{ form.csrf_token() }}
+        <div class="col-md-5">
+            <label for="inputName" class="form-label">Name</label>
+            {{ form.name(type="text", class="form-control", placeholder="Name") }}
+            {% for error in form.name.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+            <label for="inputAddressLine1" class="form-label">Address Line 1</label>
+            {{ form.street(type="text" ,class="form-control", placeholder="Address Line") }}
+            {% for error in form.street.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <label for="inputPostcode" class="form-label">Postcode</label>
+            {{ form.postcode(type="text" ,class="form-control", placeholder="Postcode") }}
+            {% for error in form.postcode.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="col-md-4">
+            <label for="inputCity" class="form-label">City/Town</label>
+            {{ form.city(type="text" ,class="form-control", placeholder="City/Town") }}
+            {% for error in form.city.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.submit(class="mx-auto btn bg-primary text-white")}}
+        </div>
+    </form>
+</body>
+{% endblock %}
