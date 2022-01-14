@@ -98,23 +98,28 @@ def timeslots() -> list:
 def findDoctor(date, time) -> User:
     # Value to hold least amount of appointments
     min_appointments = -1
+    # Variable to hold lowest appointment doctor
     index = 0
     # Get all doctors from the database
     doctors = User.query.filter_by(role='doctor').all()
     # check all doctors
     for doctor in doctors:
-        # get all appointments for specific doctor for specific time and date
-        appointments = Appointment.query.filter_by(doctor_id=doctor.id, date=date, time=time).all()
-        # Loop through all appointments
-        for apt in range(len(appointments)):
-            # if min appointments is -1 set it to first doctor
-            if min_appointments == -1:
-                min_appointments = len(appointments)
-                index = apt
+        # get all appointments for specific doctor for specific date
+        appointments = Appointment.query.filter_by(doctor_id=doctor.id, date=date).all()
 
-            # if
-            elif len(appointments) < min_appointments:
+        # if min appointments is -1 set it to first doctor
+        if min_appointments == -1:
+            min_appointments = len(appointments)
+
+        # if length of appointments is less than min_appointments
+        if len(appointments) < min_appointments:
+            # If doctor doesnt have an appoitnemtn at that time
+            if not Appointment.query.filter_by(doctor_id=doctor.id, date=date, time=time).first():
                 min_appointments = len(appointments)
+                index = doctor
+
         # if appointments is empty means that no such appointment was found
         if not appointments:
             return doctor
+    # Return the lowest appointment doctor
+    return index
