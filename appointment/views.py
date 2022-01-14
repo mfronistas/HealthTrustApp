@@ -14,13 +14,25 @@ appointment_blueprint = Blueprint('appointment', __name__, template_folder='temp
 
 # VIEWS
 # View appointment page
-
-# Might not be needed
-@appointment_blueprint.route('/appointment')
+@appointment_blueprint.route('/appointment', methods=['POST', 'GET'])
 @requires_roles('doctor', 'patient')
 @login_required
 def appointment():
+
+    cancel = request.form.get('valuecancel')
+
     if current_user.role == 'patient':
+
+        if cancel:
+            try:
+                Appointment.query.filter_by(id=cancel).delete()
+                db.session.commit()
+                flash('Appointment canceled')
+                return redirect(url_for('appointment.appointment'))
+
+            except:
+                raise Exception('Appointment not in database')
+
         return render_template('appointments.html',
                                appointments=Appointment.query.filter_by(patient_id=current_user.id)
                                .order_by(Appointment.date.asc(), Appointment.time.asc()),
@@ -34,8 +46,10 @@ def appointment():
                                hospitals=Hospital.query.all())
 
 
+
 @appointment_blueprint.route('/book_appointment', methods=['POST', 'GET'])
 @login_required
+@requires_roles('patient')
 def book_appointment():
     # Get all hospitals from database to add them to dropdown list in html page
     hospitals = Hospital.query.all()
@@ -58,7 +72,7 @@ def book_appointment():
 
         # if no slots remain in the list
         if not times:
-            flash('Current date is fully booked')
+            flash('Current date is fully booked', 'error')
         # If n isnt none, so the time the book button is pressed
         if booking_time:
             # Create new appointment and add it to the database
@@ -68,6 +82,7 @@ def book_appointment():
                                           form.date.data, booking_time, notes='pending', site_id=site.id)
             db.session.add(new_appointment)
             db.session.commit()
+            flash('Appointment Booked!')
 
             # After booking an appointment redirect to view appointment page
             return redirect(url_for('appointment.appointment'))

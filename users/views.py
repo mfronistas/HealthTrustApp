@@ -34,10 +34,10 @@ def register():
         # if email or NHS number already exists redirect user
         # back to signup page with error message so user can try again
         if user:
-            flash('Email address already exists')
+            flash('Email address already exists', 'error')
             return render_template('register.html', form=form)
         if nhsNr:
-            flash('This NHS number has already been used')
+            flash('This NHS number has already been used', 'error')
             return render_template('register.html', form=form)
 
         # create a new user with the form data
@@ -76,7 +76,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
 
         if not user or not check_password_hash(user.password, form.password.data):
-            flash('Incorrect login')
+            flash('Incorrect login', 'error')
             return render_template('login.html', form=form)
 
 
