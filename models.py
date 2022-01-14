@@ -162,8 +162,12 @@ def init_db():
     doctor = User(firstname='Mathew', lastname='Anderson', gender='Male', birthdate=datetime(1998,3,4), role='doctor',
                   nhs_number=None, phone='8909887890', email='manderson@hospital.com', password='77887788',
                   encryption_key=generate_key(), street='North 29', postcode='NE78RE', city='Newcastle')
+    admin = User(firstname='Alice', lastname='Smith', gender='Female', birthdate=datetime(1999, 5, 4), role='admin',
+                 nhs_number=None, phone='8909887891', email='admin@email.com', password='123123',
+                 encryption_key=generate_key(), street='South 29', postcode='NE24DF', city='Newcastle')
     db.session.add(patient)
     db.session.add(doctor)
+    db.session.add(admin)
     db.session.commit()
 
 def create_appointment():

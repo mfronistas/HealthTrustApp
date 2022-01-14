@@ -48,15 +48,17 @@
               </ul>
             </li>
               {% endif %}
-            {% if current_user.is_authenticated and current_user.role=='admin' %}
+            {% if current_user.is_authenticated and current_user.role =='admin' %}
              <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Admin
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Add/View Doctor</a></li>
-                <li><a class="dropdown-item" href="#">Add/View Hospital</a></li>
-                <li><a class="dropdown-item" href="#">Add/View Medicine</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('admin.add_doctor') }}">Add/View Doctor</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('admin.add_hospital') }}">Add/View Hospital</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('admin.add_medicine') }}">Add/View Medicine</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ url_for('admin.admin') }}">Admin Home</a></li>
               </ul>
             </li>
               {% endif %}
