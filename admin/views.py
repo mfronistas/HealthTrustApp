@@ -18,7 +18,7 @@ def admin():
 
 
 # Page to view all doctors
-@admin_blueprint.route('/view_all_users', methods=['POST'])
+@admin_blueprint.route('/view_all_users')
 @login_required
 @requires_roles('admin')
 def view_all_doctors():
@@ -60,14 +60,12 @@ def add_doctor():
     return render_template('registerdoctor.html', form=form)
 
 
-
 # Method to view all medicines
-@admin_blueprint.route('/view_all_medicine', methods=['POST'])
+@admin_blueprint.route('/view_all_medicine')
 @login_required
 @requires_roles('admin')
 def view_all_medicine():
     return render_template('admin.html', cur_med=Medicine.query.all())
-
 
 # Method to add a new medicine to database
 @admin_blueprint.route('/add_medicine', methods=['GET', 'POST'])
@@ -95,7 +93,7 @@ def add_medicine():
 
 
 # Method to view all hospitals
-@admin_blueprint.route('/view_all_hospitals', methods=['POST'])
+@admin_blueprint.route('/view_all_hospitals')
 @login_required
 @requires_roles('admin')
 def view_all_hospitals():
@@ -106,7 +104,7 @@ def view_all_hospitals():
 @admin_blueprint.route('/add_hospital', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
-def add_medicine():
+def add_hospital():
     # create signup form object
     form = HospitalForm()
 
@@ -121,7 +119,7 @@ def add_medicine():
         new_hospital = Hospital(name=form.name.data,
                                 city=form.city.data,
                                 street=form.street.data,
-                                postcode=form.postcode.data,)
+                                postcode=form.postcode.data, )
         db.session.add(new_hospital)
         db.session.commit()
         return redirect(url_for('admin.view_all_hospitals'))

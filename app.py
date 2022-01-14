@@ -3,7 +3,6 @@ from flask import Flask, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from flask_login import LoginManager, current_user
-from admin.views import admin_blueprint
 
 
 # Function for custom decorator for roles
@@ -77,6 +76,7 @@ if __name__ == '__main__':
     # import blueprints
     from users.views import users_blueprint
     from appointment.views import appointment_blueprint
+    from admin.views import admin_blueprint
 
     # register blueprints with app
     app.register_blueprint(users_blueprint)
