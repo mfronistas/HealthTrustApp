@@ -78,6 +78,8 @@ class AppointmentForm(FlaskForm):
         if form.date.data <= date.today():
             raise ValidationError("Please choose a valid date")
 
+
+# DOCTOR FORM
 class DoctorForm(FlaskForm):
     firstname = StringField(validators=[InputRequired(), char_validation])
     lastname = StringField(validators=[InputRequired(), char_validation])
@@ -90,9 +92,30 @@ class DoctorForm(FlaskForm):
         choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], validators=[InputRequired()])
     birthdate = DateField(validators=[InputRequired(), DataRequired()])
     phone = StringField(validators=[InputRequired(), phone_validation])
+    street = StringField(validators=[InputRequired()])
+    postcode = StringField(validators=[InputRequired()])
+    city = StringField(validators=[InputRequired()])
+    submit = SubmitField()
 
     def validate_password(self, password):
         p = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
         if not p.match(self.password.data):
             raise ValidationError(message="Password must contain at least 1 small letter,"
                                           " 1 capital letter, 1 digit and 1 special character.")
+
+
+# MEDICINE FORM
+class MedicineForm(FlaskForm):
+    name = StringField(validators=[InputRequired()])
+    type = StringField(validators=[InputRequired()])
+    dosage = StringField(validators=[InputRequired()])
+    submit = SubmitField()
+
+
+# HOSPITAL FORM
+class HospitalForm(FlaskForm):
+    name = StringField(validators=[InputRequired()])
+    street = StringField(validators=[InputRequired()])
+    postcode = StringField(validators=[InputRequired()])
+    city = StringField(validators=[InputRequired()])
+    submit = SubmitField()
