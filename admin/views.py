@@ -37,7 +37,7 @@ def add_doctor():
         doc = User.query.filter_by(email=form.email.data).first()
         # if email already exists redirect user back to signup page
         if doc:
-            flash('Email address already exists')
+            flash('Email address already exists', 'error')
             return render_template('adddoctor.html', form=form)
 
         new_doctor = User(firstname=form.firstname.data,
@@ -82,7 +82,7 @@ def add_medicine():
         med = Medicine.query.filter_by(name=form.name.data).first()
 
         if med:
-            flash('Medicine already exists')
+            flash('Medicine already exists', 'error')
             return render_template('addmed.html', form=form)
 
         new_med = Medicine(name=form.name.data,
@@ -115,7 +115,7 @@ def add_hospital():
         hospital = Hospital.query.filter_by(name=form.name.data).first()
 
         if hospital:
-            flash('Hospital already exists')
+            flash('Hospital already exists', 'error')
             return render_template('addhospital.html', form=form)
 
         new_hospital = Hospital(name=form.name.data,
