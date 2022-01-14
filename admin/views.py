@@ -14,15 +14,15 @@ admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 @login_required
 @requires_roles('admin')
 def admin():
-    return render_template('admin.html')
+    return render_template('adminhome.html')
 
 
 # Page to view all doctors
-@admin_blueprint.route('/view_all_users')
+@admin_blueprint.route('/view_all_doctors', methods=['POST'])
 @login_required
 @requires_roles('admin')
 def view_all_doctors():
-    return render_template('admin.html', cur_doctors=User.query.filter_by(role='doctor').all())
+    return render_template('adminhome.html', cur_doctors=User.query.filter_by(role='doctor').all())
 
 
 @admin_blueprint.route('/add_doctor', methods=['GET', 'POST'])
@@ -38,7 +38,7 @@ def add_doctor():
         # if email already exists redirect user back to signup page
         if doc:
             flash('Email address already exists')
-            return render_template('registerdoctor.html', form=form)
+            return render_template('adddoctor.html', form=form)
 
         new_doctor = User(firstname=form.firstname.data,
                           lastname=form.lastname.data,
@@ -57,15 +57,17 @@ def add_doctor():
         db.session.commit()
 
         return redirect(url_for('admin.view_all_doctors'))
-    return render_template('registerdoctor.html', form=form)
+    return render_template('adddoctor.html', form=form)
+
 
 
 # Method to view all medicines
-@admin_blueprint.route('/view_all_medicine')
+@admin_blueprint.route('/view_all_medicine', methods=['POST'])
 @login_required
 @requires_roles('admin')
 def view_all_medicine():
-    return render_template('admin.html', cur_med=Medicine.query.all())
+    return render_template('adminhome.html', cur_med=Medicine.query.all())
+
 
 # Method to add a new medicine to database
 @admin_blueprint.route('/add_medicine', methods=['GET', 'POST'])
@@ -81,7 +83,7 @@ def add_medicine():
 
         if med:
             flash('Medicine already exists')
-            return render_template('registermedicine.html', form=form)
+            return render_template('addmed.html', form=form)
 
         new_med = Medicine(name=form.name.data,
                            type=form.type.data,
@@ -89,15 +91,15 @@ def add_medicine():
         db.session.add(new_med)
         db.session.commit()
         return redirect(url_for('admin.view_all_medicine'))
-    return render_template('registermedicine.html', form=form)
+    return render_template('addmed.html', form=form)
 
 
 # Method to view all hospitals
-@admin_blueprint.route('/view_all_hospitals')
+@admin_blueprint.route('/view_all_hospitals', methods=['POST'])
 @login_required
 @requires_roles('admin')
 def view_all_hospitals():
-    return render_template('admin.html', cur_hospital=Hospital.query.all())
+    return render_template('adminhome.html', cur_hospital=Hospital.query.all())
 
 
 # Method to add a new hospital to database
@@ -114,13 +116,13 @@ def add_hospital():
 
         if hospital:
             flash('Hospital already exists')
-            return render_template('registerhospital.html', form=form)
+            return render_template('addhospital.html', form=form)
 
         new_hospital = Hospital(name=form.name.data,
                                 city=form.city.data,
                                 street=form.street.data,
-                                postcode=form.postcode.data, )
+                                postcode=form.postcode.data,)
         db.session.add(new_hospital)
         db.session.commit()
         return redirect(url_for('admin.view_all_hospitals'))
-    return render_template('registerhospital.html', form=form)
+    return render_template('addhospital.html', form=form)

@@ -5,6 +5,40 @@
     <h1 class="p-3 text-center">Admin Home Page</h1>
 </head>
 <body>
+<div class="row align-items-md-stretch padding">
+<div class="p-3 mx-auto text-center text-white" style="width:450px">
+    <div class="h-100 p-5 bg-primary border rounded-3">
+      <h4>Add Doctor</h4>
+      <a class="btn bg-white text-primary" href="#" >Click Here</a>
+    </div>
+  </div>
+    <div class="p-3 mx-auto text-center text-white" style="width:450px">
+    <div class="h-100 p-5 bg-primary border rounded-3">
+      <h4>Add Medicine</h4>
+      <a class="btn bg-white text-primary" href="#" >Click Here</a>
+    </div>
+  </div>
+    <div class="p-3 mx-auto text-center text-white" style="width:450px">
+    <div class="h-100 p-5 bg-primary border rounded-3">
+      <h4>Add Hospital</h4>
+      <a class="btn bg-white text-primary" href="#" >Click Here</a>
+    </div>
+  </div>
+</div>
+<div class="card border-primary border mx-auto" style="width:80%;">
+<table class="table table-bordered">
+    <tr>
+      <th scope="col">Last 10 Security Log Entries</th>
+    </tr>
+  {% for entry in logs %}
+  <tr>
+    <td>{{ entry }}</td>
+  </tr>
+  {% endfor %}
+  <tbody>
 
+  </tbody>
+</table>
+</div>
 </body>
 {% endblock %}

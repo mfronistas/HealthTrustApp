@@ -35,7 +35,7 @@
               <a class="nav-link active" href="{{ url_for('users.register') }}">Register</a>
             </li>
           {% endif %}
-              {% if current_user.is_authenticated %}
+              {% if current_user.is_authenticated and current_user.role=='patient' %}
             <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 My Account
@@ -45,6 +45,18 @@
                 <li><a class="dropdown-item" href="{{ url_for('appointment.appointment') }}">View/Cancel Appointments</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{{ url_for('users.account') }}">Account Information</a></li>
+              </ul>
+            </li>
+              {% endif %}
+            {% if current_user.is_authenticated and current_user.role=='admin' %}
+             <li class="nav-item dropdown">
+              <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Admin
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Add/View Doctor</a></li>
+                <li><a class="dropdown-item" href="#">Add/View Hospital</a></li>
+                <li><a class="dropdown-item" href="#">Add/View Medicine</a></li>
               </ul>
             </li>
               {% endif %}
