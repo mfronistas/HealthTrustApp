@@ -126,3 +126,10 @@ def add_hospital():
         db.session.commit()
         return redirect(url_for('admin.view_all_hospitals'))
     return render_template('addhospital.html', form=form)
+
+
+@admin_blueprint.route('/doctor')
+@login_required
+@requires_roles('doctor')
+def doctor():
+    return render_template('doctorhome.html')

@@ -86,7 +86,12 @@ def login():
         user.last_logged_in = user.current_logged_in
         db.session.add(user)
         db.session.commit()
-        return redirect(url_for('users.account'))
+        if current_user.role == 'admin':
+            return redirect(url_for('admin.admin'))
+        elif current_user.role == 'doctor':
+            return redirect(url_for('admin.doctor'))
+        else:
+            return redirect(url_for('users.account'))
 
     return render_template('login.html', form=form)
 
