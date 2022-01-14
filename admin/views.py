@@ -18,7 +18,7 @@ def admin():
 
 
 # Page to view all doctors
-@admin_blueprint.route('/view_all_users', methods=['POST'])
+@admin_blueprint.route('/view_all_doctors', methods=['POST'])
 @login_required
 @requires_roles('admin')
 def view_all_doctors():
