@@ -106,7 +106,7 @@ def view_all_hospitals():
 @admin_blueprint.route('/add_hospital', methods=['GET', 'POST'])
 @login_required
 @requires_roles('admin')
-def add_medicine():
+def add_hospital():
     # create signup form object
     form = HospitalForm()
 
