@@ -42,7 +42,9 @@
                   {% if current_user.role=='doctor' %} Manage Appointments {% endif %}
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                {% if current_user.role=='patient' %}
                 <li><a class="dropdown-item" href="{{ url_for('appointment.book_appointment') }}">Book Appointment</a></li>
+                {% endif %}
                 <li><a class="dropdown-item" href="{{ url_for('appointment.appointment') }}">View/Cancel Appointments</a></li>
                 {% if current_user.role=='patient' %}
                 <li><hr class="dropdown-divider"></li>
