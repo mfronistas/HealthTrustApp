@@ -101,5 +101,33 @@
         </div>
     </form>
 </div>
+<div class="field mx-auto padding" style="width:600px;">
+    <table class="table">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Email</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Phone No.</th>
+        </tr>
+        {% for user in doctors %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <form action="" method="POST">
+<input type="hidden" name="valuecancel" value="">
+<td><button class="btn btn-danger" type="submit" name="remove" value=>Remove</button>
+</td>
+</form>
+
+    </table>
+</div>
+</div>
+</div>
+{% endif %}
 </body>
 {% endblock %}
