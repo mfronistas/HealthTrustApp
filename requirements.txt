@@ -9,6 +9,7 @@ Werkzeug
 Flask-SQLAlchemy
 Flask-Login
 Flask-Talisman
+Flask-Mail
 pyotp
 pycryptodome
 SQLAlchemy
