@@ -71,6 +71,7 @@ class LoginForm(FlaskForm):
 # APPOINTMENT FORM
 class AppointmentForm(FlaskForm):
     date = DateField(validators=[InputRequired()])
+    patient_id = StringField()
     submit = SubmitField()
 
     # Check that appointment isnt in the past
