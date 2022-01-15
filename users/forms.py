@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, date
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, DateField, TimeField, SelectField
+from wtforms import StringField, SubmitField, PasswordField, DateField, SelectField, TextAreaField
 from wtforms.validators import Email, ValidationError, Length, EqualTo, InputRequired, DataRequired
 
 
@@ -118,4 +118,11 @@ class HospitalForm(FlaskForm):
     street = StringField(validators=[InputRequired()])
     postcode = StringField(validators=[InputRequired()])
     city = StringField(validators=[InputRequired()])
+    submit = SubmitField()
+
+# CONTACT FORM
+class ContactForm(FlaskForm):
+    email = StringField(validators=[InputRequired(), Email()])
+    subject = StringField(validators=[InputRequired()])
+    message = TextAreaField(validators=[InputRequired()])
     submit = SubmitField()
