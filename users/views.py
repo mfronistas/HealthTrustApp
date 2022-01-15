@@ -1,6 +1,7 @@
 # IMPORTS
 import logging
 from datetime import datetime
+from random import randint
 from functools import wraps
 from werkzeug.security import check_password_hash
 import pyotp
@@ -10,7 +11,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail
 from app import db, requires_roles, mail
 from models import User, generate_key
-from users.forms import RegisterForm, LoginForm, ContactForm
+from users.forms import RegisterForm, LoginForm, ContactForm, RecoveryForm
 
 # CONFIG
 
@@ -143,10 +144,45 @@ def account():
 # User recover password
 @users_blueprint.route('/accountrecovery', methods=['POST', 'GET'])
 def recover():
-    # Get if button is pressed,
-    recover = request.form.get('button')
 
-    return render_template('accountrecover.html')
+    email = request.form.get('email')
+    if request.form.get('step1'):
+        # If email exists
+            if User.query.filter_by(email=email).first():
+                # Generate random 6 number code
+                range_start = 10 ** (6 - 1)
+                range_end = (10 ** 6) - 1
+                security_code = randint(range_start, range_end)
+                current_code = security_code
+                # security code is emailed to user
+                msg = Message(subject='Health Trust Account Recovery', sender='healthtrust.contact@gmail.com',
+                              recipients=[email])
+                msg.body = 'Account recovery \n' \
+                           'For: {email}\n' \
+                           'Security Code: {message}'.format(email=email, message=str(current_code))
+                mail.send(msg)
+                flash('Account recovery code sent, please check your email')
+                return render_template('password.html', step1=True, step2=False, cur_code=current_code)
+            # If email doesnt exist
+            else:
+                flash('Email provided is incorrect', 'error')
+                return render_template('password.html', step1=False, step2=False)
+    elif request.form.get('step2'):
+        sec_code = request.form.get('valid')
+        code = request.form.get('code')
+        if code == sec_code:
+            form = RecoveryForm()
+            flash('Security code valid, please enter new password')
+            if form.validate_on_submit():
+                print('nice')
+            return render_template('password.html',form=form, step1=False, step2=True)
+        else:
+            flash('Invalid Code', 'error')
+            return render_template('password.html',step1=True, step2=False)
+
+
+
+    return render_template('password.html',step1=False, step2=False)
 
 
 
