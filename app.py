@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from flask_login import LoginManager, current_user
+from flask_mail import Mail
 
 
 # Function for custom decorator for roles
@@ -19,12 +20,20 @@ def requires_roles(*roles):
 
     return wrapper
 
-
+# Database config
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///healthtrust.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
 db = SQLAlchemy(app)
+# Email Config
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'healthtrust.contact@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Email123!'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 
 # Homepage
