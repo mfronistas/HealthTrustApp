@@ -22,7 +22,7 @@ def admin():
 @login_required
 @requires_roles('admin')
 def view_all_doctors():
-    return render_template('adminhome.html', cur_doctors=User.query.filter_by(role='doctor').all())
+    return render_template('adminhome.html', doctors=User.query.filter_by(role='doctor').all())
 
 
 @admin_blueprint.route('/add_doctor', methods=['GET', 'POST'])
