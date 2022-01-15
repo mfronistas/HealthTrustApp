@@ -5,6 +5,21 @@
     <h1 class="p-3 text-center">Add Doctor</h1>
 </head>
 <body>
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, error in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-danger in text-center" role="alert">
+            {% else %}
+              <div class="alert alert-success in text-center" role="alert">
+            {% endif %}
+              {{ error }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
     <form method="POST" class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:800px;">
     {{ form.csrf_token() }}
         <div class="col-md-5">
@@ -85,6 +100,6 @@
             {{ form.submit(class="mx-auto btn bg-primary text-white")}}
         </div>
     </form>
-
+</div>
 </body>
 {% endblock %}
