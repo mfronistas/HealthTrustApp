@@ -10,9 +10,9 @@
       {% if messages %}
         {% for category, error in messages %}
             {% if category == 'error' %}
-              <div class="alert alert-warning" role="alert">
+              <div class="alert alert-danger in text-center" role="alert">
             {% else %}
-              <div class="alert alert-warning" role="alert">
+              <div class="alert alert-success in text-center" role="alert">
             {% endif %}
               {{ error }}
             </div>
