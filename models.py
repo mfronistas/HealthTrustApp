@@ -165,9 +165,13 @@ def init_db():
     admin = User(firstname='Alice', lastname='Smith', gender='Female', birthdate=datetime(1999, 5, 4), role='admin',
                  nhs_number=None, phone='8909887891', email='admin@email.com', password='123123',
                  encryption_key=generate_key(), street='South 29', postcode='NE24DF', city='Newcastle')
+    hospital = Hospital(name='General Hospital', street='South 23', postcode='NE24DF', city='Newcastle')
+    medicine = Medicine(name='PainkillerOmega', type='painkiller', dosage=30)
     db.session.add(patient)
     db.session.add(doctor)
     db.session.add(admin)
+    db.session.add(hospital)
+    db.session.add(medicine)
     db.session.commit()
 
 def create_appointment():
