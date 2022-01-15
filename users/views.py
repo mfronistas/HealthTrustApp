@@ -4,13 +4,13 @@ from datetime import datetime
 from functools import wraps
 from werkzeug.security import check_password_hash
 import pyotp
-
+from flask_mail import Mail, Message
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
-
-from app import db, requires_roles
+from flask_mail import Mail
+from app import db, requires_roles, mail
 from models import User, generate_key
-from users.forms import RegisterForm, LoginForm
+from users.forms import RegisterForm, LoginForm, ContactForm
 
 # CONFIG
 
@@ -95,10 +95,23 @@ def login():
 
     return render_template('login.html', form=form)
 
-
-@users_blueprint.route('/contactus')
+# Contact us emailing system
+@users_blueprint.route('/contactus', methods=['POST', 'GET'])
 def contact_us():
-    return render_template('contact.html')
+    # create contact form object
+    form = ContactForm()
+    # if request method is POST or form is valid
+    if form.validate_on_submit():
+        # msg is emailed to admin
+        msg = Message(subject=form.subject.data, sender='healthtrust.contact@gmail.com',
+                      recipients= ['ackermandlevi@gmail.com'])
+        msg.body = 'CONTACT US ENQUIRY\n' \
+                   'BY: {email}\n' \
+                   'Message: {message}'.format(email=form.email.data, message=form.message.data)
+        mail.send(msg)
+        flash('Message sent!')
+        return render_template('contact.html',form=form )
+    return render_template('contact.html', form=form)
 
 
 # logout the current user
@@ -145,7 +158,3 @@ def faqs():
 def accessibility():
     return render_template('accessibility.html')
 
-
-@users_blueprint.route('/contact')
-def contact():
-    return render_template('contact.html')
