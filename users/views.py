@@ -110,7 +110,7 @@ def contact_us():
                    'Message: {message}'.format(email=form.email.data, message=form.message.data)
         mail.send(msg)
         flash('Message sent!')
-        return render_template('contact.html',form=form )
+        return redirect(url_for('user.contactus'))
     return render_template('contact.html', form=form)
 
 
@@ -137,6 +137,17 @@ def account():
                            postcode=current_user.postcode,
                            city=current_user.city,
                            email=current_user.email)
+
+
+
+# User recover password
+@users_blueprint.route('/accountrecovery', methods=['POST', 'GET'])
+def recover():
+    # Get if button is pressed,
+    recover = request.form.get('button')
+
+    return render_template('accountrecover.html')
+
 
 
 @users_blueprint.route('/covid')
