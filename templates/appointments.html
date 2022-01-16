@@ -28,7 +28,12 @@
         <th scope="col">Date</th>
         <th scope="col">Time</th>
         <th scope="col">Hospital</th>
-        <th scope="col">Doc</th>
+        {% if current_user.role == 'patient' %}
+        <th scope="col">Doctor</th>
+        {% endif %}
+        {% if current_user.role == 'doctor' %}
+        <th scope="col">Patient</th>
+        {% endif %}
         <th scope="col">Notes</th>
     </tr>
   </thead>
@@ -44,13 +49,54 @@
                     <td>{{ hospital.name }}</td>
                 {% endif %}
             {% endfor %}
-            {% for doc in doctors %}
-                {% if doc.id == appointment.doctor_id %}
-                    <td>Dr {{ doc.lastname }}</td>
-                {% endif %}
-            {% endfor %}
+            {% if current_user.role == 'patient' %}
+                {% for doc in doctors %}
+                    {% if doc.id == appointment.doctor_id %}
+                        <td>Dr {{ doc.lastname }}</td>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if current_user.role == 'doctor' %}
+                {% for patient in patients %}
+                    {% if patient.id == appointment.patient_id %}
+                        <td>{{ patient.firstname }} {{ patient.lastname }}</td>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             <td>{{ appointment.notes }}</td>
-            <td><button type="submit" class="btn btn-primary">View</button></td>
+            <form method="post" action="{{ url_for('appointment.view_appointment') }}">
+            <td>
+                <button class="btn btn-primary" name="view" value="{{ appointment.id }}">View</button>
+                <input type="hidden" name="view-date" value="{{ appointment.date }}">
+                <input type="hidden" name="view-time" value="{{ appointment.time }}">
+
+                {% if current_user.role == 'doctor' %}
+                {% for patient in patients %}
+                    {% if patient.id == appointment.patient_id %}
+                        <input type="hidden" name="view-patient" value="{{ patient.firstname }} {{ patient.lastname }}">
+                    {% endif %}
+                {% endfor %}
+                <input type="hidden" name="view-doctor" value="Dr {{ current_user.lastname }}">
+                {% endif %}
+                {% if current_user.role == 'patient' %}
+                {% for doc in doctors %}
+                    {% if doc.id == appointment.doctor_id %}
+                        <input type="hidden" name="view-doctor" value="Dr {{ current_user.lastname }}">
+                    {% endif %}
+                {% endfor %}
+                <input type="hidden" name="view-patient" value="{{ current_user.firstname }} {{ current_user.lastname }}">
+                {% endif %}
+
+
+
+                {% for hospital in hospitals %}
+                {% if hospital.id == appointment.site_id %}
+                    <input type="hidden" name="view-hospital" value="{{ hospital.name }}">
+                {% endif %}
+                {% endfor %}
+
+            </td>
+            </form>
             <form action="" method="POST">
             <input type="hidden" name="valuecancel" value="{{appointment.id}}">
             <td><button class="btn btn-danger" type="submit" name="cancel" value={{ appointment.id }}>Cancel</button>

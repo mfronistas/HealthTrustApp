@@ -42,14 +42,14 @@ def appointment():
         return render_template('appointments.html',
                                appointments=Appointment.query.filter_by(doctor_id=current_user.id)
                                .order_by(Appointment.date.asc(), Appointment.time.asc()),
-                               doctors=User.query.filter_by(role='doctor'),
+                               patients=User.query.filter_by(role='patient'),
                                hospitals=Hospital.query.all())
 
 
 
 @appointment_blueprint.route('/book_appointment', methods=['POST', 'GET'])
 @login_required
-@requires_roles('patient')
+@requires_roles('patient', 'doctor')
 def book_appointment():
     # Get all hospitals from database to add them to dropdown list in html page
     hospitals = Hospital.query.all()
@@ -76,7 +76,7 @@ def book_appointment():
             return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
 
         # If user has booked another appointment for the same date
-        if Appointment.query.filter_by(patient_id=current_user.id, date=form.date.data):
+        if Appointment.query.filter_by(patient_id=current_user.id, date=form.date.data).first():
             flash('Appointment already booked for specific date')
             return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
         # If n isnt none, so the time the book button is pressed
@@ -97,6 +97,17 @@ def book_appointment():
     # if request method is GET or form not valid re-render booking page
     return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
 
+
+@appointment_blueprint.route('/appointmentview', methods=['POST', 'GET'])
+def view_appointment():
+    appointment_id = request.form.get('view')
+    date = request.form.get("view-date")
+    appointment_time = request.form.get("view-time")
+    patient = request.form.get("view-patient")
+    doctor = request.form.get("view-doctor")
+    hospital = request.form.get("view-hospital")
+    return render_template('appointmentview.html', appointment=appointment_id, date=date, time=appointment_time,
+                           patient=patient, doctor=doctor, hospital=hospital)
 
 # Method to create timeslots and add them to a list
 def timeslots() -> list:
