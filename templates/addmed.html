@@ -1,6 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <body>
+    <div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, error in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-danger in text-center" role="alert">
+            {% else %}
+              <div class="alert alert-success in text-center" role="alert">
+            {% endif %}
+              {{ error }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+{% if not add_med %}
+    <head>
+    <h1 class="p-3 text-center">Medicine</h1>
+</head>
+    <div class="field mx-auto padding" style="width:600px;">
+    <table class="table">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th>Dosage</th>
+            <th>Type</th>
+            <th>  </th>
+
+        </tr>
+        {% for medicine in cur_med %}
+            <tr>
+                <td>{{ medicine.id }}</td>
+                <td>{{ medicine.name }}</td>
+                <td>{{ medicine.dosage }}</td>
+                <td>{{ medicine.type }}</td>
+            <td>
+                <button class="btn btn-danger" name="remove_med" value="1">Remove</button>
+            </td>
+            </tr>
+
+{% endfor %}
+    </table>
+    <div>
+ <a class="btn bg-info" href="{{ url_for('admin.add_medicine') }}" >Add Medicine</a>
+
+</div>
+</div>
+    {% endif %}
+    {% if add_med %}
 <head>
     <h1 class="p-3 text-center">Add Medicine</h1>
 </head>
@@ -33,28 +82,8 @@
             {{ form.submit(class="mx-auto btn bg-primary text-white")}}
         </div>
     </form>
-<div class="field mx-auto padding" style="width:600px;">
-    <table class="table">
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th>Street</th>
-            <th>Postcode</th>
-            <th>City</th>
-        </tr>
-        {% for medicine in medicines %}
-            <tr>
-                <td>{{ medicine.id }}</td>
-                <td>{{ medicine.name }}</td>
-                <td>{{ medicine.dosage }}</td>
-            </tr>
-            <form action="" method="POST">
-<input type="hidden" name="valuecancel" value="">
-<td><button class="btn btn-danger" type="submit" name="remove" value=>Remove</button>
-</td>
-</form>
-{% endfor %}
-    </table>
-</div>
-</body>
+{% endif %}
+        </body>
+        </div>
+    </div>
 {% endblock %}
