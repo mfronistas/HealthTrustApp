@@ -37,7 +37,10 @@
                 <td>{{ hospital.street }}</td>
                 <td>{{ hospital.postcode }}</td>
                 <td>{{ hospital.city }}</td>
-            <td><button class="btn btn-danger" name="remove_hos" value=>Remove</button>
+            <td><form action="" method="POST">
+            <input type="hidden" name="valuecancel" value="{{ hospital.id }}">
+                     <button class="btn btn-danger" name="remove_hospital" value={{ hospital.id }}>Remove</button>
+            </form>
             </td>
             </tr>
 
