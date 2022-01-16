@@ -100,13 +100,12 @@ def book_appointment():
 
 @appointment_blueprint.route('/appointmentview', methods=['POST', 'GET'])
 def view_appointment():
-    appointment_id = request.form.get('view')
     date = request.form.get("view-date")
     appointment_time = request.form.get("view-time")
     patient = request.form.get("view-patient")
     doctor = request.form.get("view-doctor")
     hospital = request.form.get("view-hospital")
-    return render_template('appointmentview.html', appointment=appointment_id, date=date, time=appointment_time,
+    return render_template('appointmentview.html', date=date, time=appointment_time,
                            patient=patient, doctor=doctor, hospital=hospital)
 
 # Method to create timeslots and add them to a list
