@@ -37,7 +37,10 @@
                 <td>{{ medicine.dosage }}</td>
                 <td>{{ medicine.type }}</td>
             <td>
-                <button class="btn btn-danger" name="remove_med" value="1">Remove</button>
+                <form action="" method="POST">
+            <input type="hidden" name="valuecancel" value="{{ medicine.id }}">
+                     <button class="btn btn-danger" name="remove_doc" value={{ medicine.id }}>Remove</button>
+            </form>
             </td>
             </tr>
 
