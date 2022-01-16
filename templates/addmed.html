@@ -33,5 +33,28 @@
             {{ form.submit(class="mx-auto btn bg-primary text-white")}}
         </div>
     </form>
+<div class="field mx-auto padding" style="width:600px;">
+    <table class="table">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th>Street</th>
+            <th>Postcode</th>
+            <th>City</th>
+        </tr>
+        {% for medicine in medicines %}
+            <tr>
+                <td>{{ medicine.id }}</td>
+                <td>{{ medicine.name }}</td>
+                <td>{{ medicine.dosage }}</td>
+            </tr>
+            <form action="" method="POST">
+<input type="hidden" name="valuecancel" value="">
+<td><button class="btn btn-danger" type="submit" name="remove" value=>Remove</button>
+</td>
+</form>
+{% endfor %}
+    </table>
+</div>
 </body>
 {% endblock %}

@@ -40,5 +40,30 @@
             {{ form.submit(class="mx-auto btn bg-primary text-white")}}
         </div>
     </form>
+<div class="field mx-auto padding" style="width:600px;">
+    <table class="table">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th>Street</th>
+            <th>Postcode</th>
+            <th>City</th>
+        </tr>
+        {% for hospital in hospitals %}
+            <tr>
+                <td>{{ hospital.id }}</td>
+                <td>{{ hospital.name }}</td>
+                <td>{{ hospital.street }}</td>
+                <td>{{ hospital.postcode }}</td>
+                <td>{{ hospital.city }}</td>
+            </tr>
+            <form action="" method="POST">
+<input type="hidden" name="valuecancel" value="">
+<td><button class="btn btn-danger" type="submit" name="remove" value=>Remove</button>
+</td>
+</form>
+{% endfor %}
+    </table>
+</div>
 </body>
 {% endblock %}

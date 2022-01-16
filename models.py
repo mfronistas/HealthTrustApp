@@ -166,11 +166,13 @@ def init_db():
                  nhs_number=None, phone='8909887891', email='admin@email.com', password='123123',
                  encryption_key=generate_key(), street='South 29', postcode='NE24DF', city='Newcastle')
     hospital = Hospital(name='General Hospital', street='South 23', postcode='NE24DF', city='Newcastle')
+    hospital2 = Hospital(name='Victoria Hospital', street='North 40', postcode='NE25DF', city='Newcastle')
     medicine = Medicine(name='PainkillerOmega', type='painkiller', dosage=30)
     db.session.add(patient)
     db.session.add(doctor)
     db.session.add(admin)
     db.session.add(hospital)
+    db.session.add(hospital2)
     db.session.add(medicine)
     db.session.commit()
 
