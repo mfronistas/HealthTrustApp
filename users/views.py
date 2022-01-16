@@ -1,8 +1,9 @@
 # IMPORTS
 import logging
 from datetime import datetime
+from random import randint
 from functools import wraps
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 import pyotp
 from flask_mail import Mail, Message
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
@@ -10,7 +11,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail
 from app import db, requires_roles, mail
 from models import User, generate_key
-from users.forms import RegisterForm, LoginForm, ContactForm
+from users.forms import RegisterForm, LoginForm, ContactForm, RecoveryForm
 
 # CONFIG
 
@@ -21,7 +22,6 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 # view registration
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-
     # create signup form object
     form = RegisterForm()
 
@@ -79,7 +79,6 @@ def login():
             flash('Incorrect login', 'error')
             return render_template('login.html', form=form)
 
-
         login_user(user)
 
         user.current_logged_in = datetime.now()
@@ -95,6 +94,7 @@ def login():
 
     return render_template('login.html', form=form)
 
+
 # Contact us emailing system
 @users_blueprint.route('/contactus', methods=['POST', 'GET'])
 def contact_us():
@@ -104,13 +104,13 @@ def contact_us():
     if form.validate_on_submit():
         # msg is emailed to admin
         msg = Message(subject=form.subject.data, sender='healthtrust.contact@gmail.com',
-                      recipients= ['ackermandlevi@gmail.com'])
+                      recipients=['ackermandlevi@gmail.com'])
         msg.body = 'CONTACT US ENQUIRY\n' \
                    'BY: {email}\n' \
                    'Message: {message}'.format(email=form.email.data, message=form.message.data)
         mail.send(msg)
         flash('Message sent!')
-        return render_template('contact.html',form=form )
+        return redirect(url_for('user.contactus'))
     return render_template('contact.html', form=form)
 
 
@@ -139,6 +139,57 @@ def account():
                            email=current_user.email)
 
 
+# User recover password
+@users_blueprint.route('/accountrecovery', methods=['POST', 'GET'])
+def recover():
+    email = request.form.get('email')
+    step2 = request.form.get('step2')
+    if request.form.get('step1'):
+        # If email exists
+        if User.query.filter_by(email=email).first():
+            # Generate random 6 number code
+            range_start = 10 ** (6 - 1)
+            range_end = (10 ** 6) - 1
+            security_code = randint(range_start, range_end)
+            current_code = security_code
+            # security code is emailed to user
+            msg = Message(subject='Health Trust Account Recovery', sender='healthtrust.contact@gmail.com',
+                          recipients=[email])
+            msg.body = 'Account recovery \n' \
+                       'For: {email}\n' \
+                       'Security Code: {message}'.format(email=email, message=str(current_code))
+            mail.send(msg)
+            flash('Account recovery code sent, please check your email')
+            return render_template('password.html', step1=True, step2=False, cur_code=current_code, cur_email=email)
+        # If email doesnt exist
+        else:
+            flash('Email provided is incorrect', 'error')
+            return render_template('password.html', step1=False, step2=False, cur_email=email)
+
+    elif step2:
+        email = request.form.get('email')
+        sec_code = request.form.get('valid')
+        code = request.form.get('code')
+        if not code:
+            code = sec_code
+
+        if code == sec_code:
+            form = RecoveryForm()
+            if form.validate_on_submit():
+                user = User.query.filter_by(email=email).first()
+                user.password = generate_password_hash(form.password.data)
+                db.session.commit()
+                return redirect(url_for('users.login'))
+
+            return render_template('password.html', form=form, step1=False, step2='1', cur_email=email,
+                                   cur_code=sec_code, code=code)
+        else:
+            flash('Invalid Code', 'error')
+            return render_template('password.html', step1=True, step2=False, cur_email=email, cur_code=sec_code)
+
+    return render_template('password.html', step1=False, step2=False)
+
+
 @users_blueprint.route('/covid')
 def covid():
     return render_template('covid.html')
@@ -157,4 +208,3 @@ def faqs():
 @users_blueprint.route('/accessibility')
 def accessibility():
     return render_template('accessibility.html')
-

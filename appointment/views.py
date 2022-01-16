@@ -73,6 +73,12 @@ def book_appointment():
         # if no slots remain in the list
         if not times:
             flash('Current date is fully booked', 'error')
+            return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
+
+        # If user has booked another appointment for the same date
+        if Appointment.query.filter_by(patient_id=current_user.id, date=form.date.data):
+            flash('Appointment already booked for specific date')
+            return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
         # If n isnt none, so the time the book button is pressed
         if booking_time:
             # Create new appointment and add it to the database

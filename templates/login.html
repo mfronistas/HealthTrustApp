@@ -2,7 +2,7 @@
 
 {% block content %}
 <head>
-<h1 class="p-3 text-center">User Login</h1>
+<h1 class="p-3 text-center">Login</h1>
 </head>
 
 <div>
@@ -45,23 +45,29 @@
         {% endfor %}
     </div>
   </div>
-    <div>
-  {{ form.submit(class="btn bg-primary text-white") }}
+    <div class="row justify-content-center">
+  {{ form.submit(class="btn bg-primary text-white", style="width:150px") }}
         </div>
     </div>
+<div class="p-3 mx-auto text-center text-white" style="width:450px">
+    <div class="h-100 p-3 bg-primary border rounded-3">
+      <h4>Forgot your password?</h4>
+            <a class="btn bg-white text-primary" href="{{ url_for('users.recover') }}">Recover Password
+            </a>
+            </form>
+    </div>
+  </div>
 </form>
-<div class="p-3 text-center text-white mx-auto" style="width:450px">
-    <div class="h-100 p-5 bg-primary border rounded-3">
+</div>
+
+
+<div class="p-3 mx-auto text-center text-white" style="width:450px">
+    <div class="h-100 p-3 bg-primary border rounded-3">
       <h4>Dont Have An Account?</h4>
       <a class="btn bg-white text-primary" href="{{ url_for('users.register') }}" >Register Now</a>
     </div>
   </div>
-<div class="p-3 text-center text-white mx-auto" style="width:450px">
-    <div class="h-100 p-5 bg-primary border rounded-3">
-      <h4>Forgotten password?</h4>
-      <a class="btn bg-white text-primary" href="{{ url_for('users.password') }}">Reset Now</a>
-    </div>
-  </div>
+</form>
 </div>
 
 

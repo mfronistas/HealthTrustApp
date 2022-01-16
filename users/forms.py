@@ -1,7 +1,7 @@
 import re
 from datetime import datetime, date
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, DateField, SelectField, TextAreaField
+from wtforms import StringField, SubmitField, PasswordField, DateField, SelectField, TextAreaField, IntegerField
 from wtforms.validators import Email, ValidationError, Length, EqualTo, InputRequired, DataRequired
 
 
@@ -120,9 +120,26 @@ class HospitalForm(FlaskForm):
     city = StringField(validators=[InputRequired()])
     submit = SubmitField()
 
+
 # CONTACT FORM
 class ContactForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Email()])
     subject = StringField(validators=[InputRequired()])
     message = TextAreaField(validators=[InputRequired()])
     submit = SubmitField()
+
+
+# RECOVERY FORM
+class RecoveryForm(FlaskForm):
+    password = PasswordField(validators=[InputRequired(),
+                                         Length(min=6, max=12,
+                                                message="Password must be between 6 and 12 characters long.")])
+    confirm_password = PasswordField(validators=[InputRequired(),
+                                                 EqualTo('password', message="Passwords must be the same.")])
+    submit = SubmitField()
+
+    def validate_password(self, password):
+        p = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
+        if not p.match(self.password.data):
+            raise ValidationError(message="Password must contain at least 1 small letter,"
+                                          " 1 capital letter, 1 digit and 1 special character.")
