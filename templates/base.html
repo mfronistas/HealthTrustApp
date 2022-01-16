@@ -67,9 +67,11 @@
               </ul>
             </li>
               {% endif %}
+            {% if not current_user.is_authenticated or current_user.role == 'patient' %}
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('users.contact_us') }}">Contact Us</a>
             </li>
+            {% endif %}
             {% if current_user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('users.logout') }}">Log Out</a>
