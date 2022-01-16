@@ -59,9 +59,9 @@
                 Admin
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{{ url_for('admin.add_doctor') }}">Add/View Doctor</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('admin.add_hospital') }}">Add/View Hospital</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('admin.add_medicine') }}">Add/View Medicine</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('admin.view_all_doctors') }}">Add/View Doctor</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('admin.view_all_hospitals') }}">Add/View Hospital</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('admin.view_all_medicine') }}">Add/View Medicine</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{{ url_for('admin.admin') }}">Admin Home</a></li>
               </ul>
