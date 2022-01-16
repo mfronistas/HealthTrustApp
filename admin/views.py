@@ -62,11 +62,11 @@ def add_doctor():
 
 
 # Method to view all medicines
-@admin_blueprint.route('/view_all_medicine', methods=['POST'])
+@admin_blueprint.route('/view_all_medicine', methods=['POST', 'GET'])
 @login_required
 @requires_roles('admin')
 def view_all_medicine():
-    return render_template('adminhome.html', cur_med=Medicine.query.all())
+    return render_template('addmed.html', cur_med=Medicine.query.all())
 
 
 # Method to add a new medicine to database
@@ -91,15 +91,15 @@ def add_medicine():
         db.session.add(new_med)
         db.session.commit()
         return redirect(url_for('admin.view_all_medicine'))
-    return render_template('addmed.html', form=form)
+    return render_template('addmed.html', form=form, add_med=True)
 
 
 # Method to view all hospitals
-@admin_blueprint.route('/view_all_hospitals', methods=['POST'])
+@admin_blueprint.route('/view_all_hospitals', methods=['POST', 'GET'])
 @login_required
 @requires_roles('admin')
 def view_all_hospitals():
-    return render_template('adminhome.html', cur_hospital=Hospital.query.all())
+    return render_template('addhospital.html', cur_hospital=Hospital.query.all())
 
 
 # Method to add a new hospital to database
@@ -125,11 +125,6 @@ def add_hospital():
         db.session.add(new_hospital)
         db.session.commit()
         return redirect(url_for('admin.view_all_hospitals'))
-    return render_template('addhospital.html', form=form)
+    return render_template('addhospital.html', form=form, add_hos=True)
 
 
-@admin_blueprint.route('/doctor')
-@login_required
-@requires_roles('doctor')
-def doctor():
-    return render_template('doctorhome.html')
