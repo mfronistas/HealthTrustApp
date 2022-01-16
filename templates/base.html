@@ -35,16 +35,21 @@
               <a class="nav-link active" href="{{ url_for('users.register') }}">Register</a>
             </li>
           {% endif %}
-              {% if current_user.is_authenticated and current_user.role=='patient' %}
+              {% if current_user.is_authenticated and (current_user.role=='patient' or current_user.role=='doctor' )%}
             <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                My Account
+                  {% if current_user.role=='patient' %} My Account {% endif %}
+                  {% if current_user.role=='doctor' %} Manage Appointments {% endif %}
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                {% if current_user.role=='patient' %}
                 <li><a class="dropdown-item" href="{{ url_for('appointment.book_appointment') }}">Book Appointment</a></li>
+                {% endif %}
                 <li><a class="dropdown-item" href="{{ url_for('appointment.appointment') }}">View/Cancel Appointments</a></li>
+                {% if current_user.role=='patient' %}
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{{ url_for('users.account') }}">Account Information</a></li>
+                {% endif %}
               </ul>
             </li>
               {% endif %}
