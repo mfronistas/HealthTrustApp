@@ -1,6 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <body>
+    <div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, error in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-danger in text-center" role="alert">
+            {% else %}
+              <div class="alert alert-success in text-center" role="alert">
+            {% endif %}
+              {{ error }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+    {% if not add_hos%}
+        <head>
+    <h1 class="p-3 text-center">Hospitals</h1>
+</head>
+    <div class="field mx-auto padding" style="width:600px;">
+    <table class="table">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th>Street</th>
+            <th>Postcode</th>
+            <th>City</th>
+            <th></th>
+        </tr>
+        {% for hospital in cur_hospital %}
+            <tr>
+                <td>{{ hospital.id }}</td>
+                <td>{{ hospital.name }}</td>
+                <td>{{ hospital.street }}</td>
+                <td>{{ hospital.postcode }}</td>
+                <td>{{ hospital.city }}</td>
+            <td><button class="btn btn-danger" name="remove_hos" value=>Remove</button>
+            </td>
+            </tr>
+
+{% endfor %}
+    </table>
+    <div>
+ <a class="btn bg-info" href="{{ url_for('admin.add_hospital') }}" >Add Hospital</a>
+
+</div>
+</div>
+    {% endif %}
+    {% if add_hos %}
 <head>
     <h1 class="p-3 text-center">Add Hospital</h1>
 </head>
@@ -40,30 +89,8 @@
             {{ form.submit(class="mx-auto btn bg-primary text-white")}}
         </div>
     </form>
-<div class="field mx-auto padding" style="width:600px;">
-    <table class="table">
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th>Street</th>
-            <th>Postcode</th>
-            <th>City</th>
-        </tr>
-        {% for hospital in hospitals %}
-            <tr>
-                <td>{{ hospital.id }}</td>
-                <td>{{ hospital.name }}</td>
-                <td>{{ hospital.street }}</td>
-                <td>{{ hospital.postcode }}</td>
-                <td>{{ hospital.city }}</td>
-            </tr>
-            <form action="" method="POST">
-<input type="hidden" name="valuecancel" value="">
-<td><button class="btn btn-danger" type="submit" name="remove" value=>Remove</button>
-</td>
-</form>
-{% endfor %}
-    </table>
-</div>
+{% endif %}
 </body>
+        </div>
+    </div>
 {% endblock %}
