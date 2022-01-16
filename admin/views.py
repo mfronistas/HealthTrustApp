@@ -22,6 +22,16 @@ def admin():
 @login_required
 @requires_roles('admin')
 def view_all_doctors():
+
+    cancel = request.form.get('valuecancel')
+
+    if cancel:
+        try:
+            User.query.filter_by(id=cancel).delete()
+            db.session.commit()
+            return redirect(url_for('admin.view_all_doctors'))
+        except:
+            raise Exception('Doctor not in database')
     return render_template('adddoctor.html', doctors=User.query.filter_by(role='doctor').all())
 
 
@@ -31,7 +41,6 @@ def view_all_doctors():
 def add_doctor():
     # create signup form object
     form = DoctorForm()
-
     # if request method is POST or form is valid
     if form.validate_on_submit():
         doc = User.query.filter_by(email=form.email.data).first()
@@ -66,6 +75,15 @@ def add_doctor():
 @login_required
 @requires_roles('admin')
 def view_all_medicine():
+    cancel = request.form.get('valuecancel')
+
+    if cancel:
+        try:
+            Medicine.query.filter_by(id=cancel).delete()
+            db.session.commit()
+            return redirect(url_for('admin.view_all_medicine'))
+        except:
+            raise Exception('Medicine not in database')
     return render_template('addmed.html', cur_med=Medicine.query.all())
 
 
@@ -99,6 +117,15 @@ def add_medicine():
 @login_required
 @requires_roles('admin')
 def view_all_hospitals():
+    cancel = request.form.get('valuecancel')
+
+    if cancel:
+        try:
+            Hospital.query.filter_by(id=cancel).delete()
+            db.session.commit()
+            return redirect(url_for('admin.view_all_hospitals'))
+        except:
+            raise Exception('Hospital not in database')
     return render_template('addhospital.html', cur_hospital=Hospital.query.all())
 
 
