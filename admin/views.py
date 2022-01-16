@@ -18,11 +18,11 @@ def admin():
 
 
 # Page to view all doctors
-@admin_blueprint.route('/view_all_doctors', methods=['POST'])
+@admin_blueprint.route('/view_all_doctors', methods=['POST', 'GET'])
 @login_required
 @requires_roles('admin')
 def view_all_doctors():
-    return render_template('adminhome.html', doctors=User.query.filter_by(role='doctor').all())
+    return render_template('adddoctor.html', doctors=User.query.filter_by(role='doctor').all())
 
 
 @admin_blueprint.route('/add_doctor', methods=['GET', 'POST'])
@@ -57,7 +57,7 @@ def add_doctor():
         db.session.commit()
 
         return redirect(url_for('admin.view_all_doctors'))
-    return render_template('adddoctor.html', form=form)
+    return render_template('adddoctor.html', form=form, add_doc=True)
 
 
 
