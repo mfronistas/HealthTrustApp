@@ -6,9 +6,9 @@ from datetime import time
 from flask_mail import Mail, Message
 from app import db, requires_roles, mail
 from flask_login import login_required, current_user
-from models import Appointment, User, Hospital
+from models import Appointment, User, Hospital, Medicine, Prescription
 # CONFIG
-from users.forms import AppointmentForm
+from users.forms import AppointmentForm, PrescriptionForm
 
 appointment_blueprint = Blueprint('appointment', __name__, template_folder='templates')
 
@@ -127,18 +127,29 @@ def book_appointment():
 
 
 @appointment_blueprint.route('/appointmentview', methods=['POST', 'GET'])
+@login_required
 def view_appointment():
+    form = PrescriptionForm()
     date = request.form.get("view-date")
     appointment_time = request.form.get("view-time")
+    appointment_id = request.form.get("view")
     patient = request.form.get("view-patient")
     doctor = request.form.get("view-doctor")
     hospital = request.form.get("view-hospital")
     patient_id = request.form.get("view-id")
-    print(patient_id)
     patient_data = User.query.filter_by(id=patient_id).first()
-    print(patient_data)
-    return render_template('appointmentview.html', date=date, time=appointment_time,
-                           patient=patient, doctor=doctor, hospital=hospital, patient_data=patient_data)
+    medicines = Medicine.query.all()
+    medicine = request.form.get('medicine')
+    prescriptions = Prescription.query.filter_by(appointment_id=appointment_id).all()
+    if form.validate_on_submit():
+        new_prescription = Prescription(medicine_id=medicine, appointment_id=appointment_id,
+                                        instructions=form.instructions.data)
+        db.session.add(new_prescription)
+        db.session.commit()
+    return render_template('appointmentview.html', date=date, time=appointment_time, prescriptions=prescriptions,
+                           patient=patient, doctor=doctor, hospital=hospital, patient_data=patient_data,
+                           medicine=medicines, form=form, patient_id=patient_id, appointment_id=appointment_id)
+
 
 # Method to create timeslots and add them to a list
 def timeslots() -> list:

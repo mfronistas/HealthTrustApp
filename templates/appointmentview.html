@@ -34,6 +34,7 @@
             </div>
         </div>
       </div>
+{% if current_user.role == 'doctor' %}
     <div class="container p-5 py-5">
         <div class="column is-6 is-offset-3">
             <h2 class="title fw-bold">Patient details</h2>
@@ -42,7 +43,7 @@
                 <tbody>
                     <tr>
                         <th>Name</th>
-                        <th>{{ patient_data.firstname}} {{ patient_data.lastname  }}</th>
+                        <th>{{ patient_data.firstname }} {{ patient_data.lastname }}</th>
                     </tr>
                     <tr>
                         <th>Gender</th>
@@ -66,39 +67,76 @@
                     </tr>
                 </tbody>
                 </table>
-                <a class="btn bg-primary text-white" role="button" href="#">Add Prescription</a>
+                <form method="POST" action="{{ url_for('appointment.view_appointment') }}" class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:60%;">
+                {{ form.csrf_token() }}
+                <div class="col-md-5">
+                    <label for="inputMedicine" class="form-label">Medicine</label>
+                    <select name="medicine" id="medicine" class="form-select">
+                        {% for i in medicine %}
+                      <option value="{{ i.id }}">{{ i.name }}
+                      </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label for="inputPassword3" class="form-label">Instructions</label>
+                    {{ form.instructions(class="form-control", placeholder="Instructions") }}
+                    <td>
+                        <button class="btn bg-primary text-white mx-auto top-margin" type="submit"
+                                name="view" value="{{ appointment_id }}">Add Prescription</button>
+                        <input type="hidden" name="view-date" value="{{ date }}">
+                        <input type="hidden" name="view-time" value="{{ time }}">
+                        <input type="hidden" name="view-patient" value="{{ patient }}">
+                        <input type="hidden" name="view-doctor" value="{{ doctor }}">
+                        <input type="hidden" name="view-hospital" value="{{ hospital }}">
+                        <input type="hidden" name="view-id" value="{{ patient_id }}">
+                    </td>
+                </div>
+                </form>
             </div>
-      </div>
+        </div>
+    </div>
+{% endif %}
+{% if prescriptions %}
+<div class="card border-primary border mx-auto" style="width:60%;">
+<table class="table">
+  <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Medicine</th>
+        <th scope="col">Instructions</th>
+    </tr>
+  </thead>
+  <tbody>
 
+    {% for prescription in prescriptions %}
+        <tr>
+            <th scope="row"> {{ prescription.id }}</th>
+            {% for med in medicine %}
+                {% if med.id == prescription.medicine_id %}
+                    <td>{{ med.name }}</td>
+                {% endif %}
+            {% endfor %}
+            <td>{{ prescription.instructions }}</td>
+        </tr>
+    {% endfor %}
+
+  </tbody>
+
+</table>
 </div>
+{% endif %}
+{% if current_user.role == 'doctor' %}
     <div class="card mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:60%;">
-                <div class="row mb-3">
-                    <label for="inputPassword3" class="col-form-label">Appointment Notes</label>
-                    <input type="text" id="notes" name="notes" placeholder="Notes">
-                    </div>
-                <div>
-                    <div class="btn bg-primary text-white">Submit</div>
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-form-label">Appointment Notes</label>
+            <input type="text" id="notes" name="notes" placeholder="Notes">
         </div>
-            </div>
+        <div>
+            <div class="btn bg-primary text-white">Submit</div>
         </div>
-<form class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:60%;">
-<div class="col-md-5">
-    <label for="inputMedicine" class="form-label">Medicine</label>
-    <select name="medicine" id="medicine" class="form-select">
-        {% for i in medicine %}
-      <option value="{{ i.name }}">{{ i.name }}
-      </option>
-        {% endfor %}
-    </select>
+    </div>
+{% endif %}
 </div>
-<div class="col-md-5">
-    <label for="inputPassword3" class="form-label">Instructions</label>
-    <input type="text" class="form-control" aria-label="Instructions">
-    <td>
-        <button class="btn btn-info mx-auto top-margin" name="step1" value='1'>
-            <span class="glyphicon glyphicon-trash"></span> Submit</button></td>
-    </td>
-</div>
-</form>
 </body>
 {% endblock %}
