@@ -195,11 +195,6 @@ def covid():
     return render_template('covid.html')
 
 
-@users_blueprint.route('/aboutus')
-def aboutus():
-    return render_template('aboutus.html')
-
-
 @users_blueprint.route('/faqs')
 def faqs():
     return render_template('faqs.html')
