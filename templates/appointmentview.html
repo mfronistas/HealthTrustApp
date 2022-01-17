@@ -1,13 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-     <h2 class="title is-2">Appointment</h2>
-        <label>{{ appointment }}</label>
-        <label>{{ date }}</label>
-        <label>{{ time }}</label>
-        <label>{{ patient }}</label>
-        <label>{{ doctor }}</label>
-        <label>{{ hospital }}</label>
-
+<body>
+<div class="card p-2 mb-4 mx-auto bg-light border-primary border rounded-3 top-margin" style="width:1000px">
+      <div class="container p-5 py-5">
+        <div class="column is-6 is-offset-3">
+            <h2 class="title fw-bold">Your Appointment</h2>
+            <div class="box">
+                <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Date</th>
+                        <th>{{ date }}</th>
+                    </tr>
+                    <tr>
+                        <th>Time</th>
+                        <th>{{ time }}</th>
+                    </tr>
+                    <tr>
+                        <th>Patient</th>
+                        <th>{{ patient }}</th>
+                    </tr>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>{{ doctor }}</th>
+                    </tr>
+                    <tr>
+                        <th>Hospital</th>
+                        <th>{{ hospital }}</th>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+</div>
+</body>
 {% endblock %}
