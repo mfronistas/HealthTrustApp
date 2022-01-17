@@ -46,6 +46,7 @@
                 <li><a class="dropdown-item" href="{{ url_for('appointment.book_appointment') }}">Book Appointment</a></li>
                 {% endif %}
                 <li><a class="dropdown-item" href="{{ url_for('appointment.appointment') }}">View/Cancel Appointments</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('users.view_prescriptions') }}">View Perscriptions</a></li>
                 {% if current_user.role=='patient' %}
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{{ url_for('users.account') }}">Account Information</a></li>

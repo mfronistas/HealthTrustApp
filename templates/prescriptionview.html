@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<head>
+<h1 class="p-3 text-center">My Prescriptions</h1>
+</head>
+<body>
+<div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, error in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-danger in text-center" role="alert">
+            {% else %}
+              <div class="alert alert-success in text-center" role="alert">
+            {% endif %}
+              {{ error }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+<div class="card border-primary border mx-auto" style="width:30%;">
+<table class="table">
+  <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Medicine</th>
+        <th scope="col">Instructions</th>
+
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for prescription in prescriptions %}
+
+        <tr>
+            <th scope="row">{{ prescription.id }}</th>
+            {% for med in meds %}
+            {% if med.id == prescription.medicine_id %}
+                <td>{{ med.name }}</td>
+                {% endif %}
+                {% endfor %}
+                <td>{{ prescription.instructions}}</td>
+            <form method="post" action="{{ url_for('appointment.view_appointment') }}">
+            </form>
+
+
+
+
+
+
+
+        </tr>
+    {% endfor %}
+
+
+  </tbody>
+
+</table>
+</div>
+</div>
+</body>
+{% endblock %}
