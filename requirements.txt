@@ -20,3 +20,5 @@ email-validator
 pycryptodome
 cryptography
 PyMySQL
+Crypto
+cryptography
