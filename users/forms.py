@@ -1,5 +1,7 @@
 import re
 from datetime import datetime, date
+
+from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, DateField, SelectField, TextAreaField, IntegerField
 from wtforms.validators import Email, ValidationError, Length, EqualTo, InputRequired, DataRequired
@@ -77,6 +79,7 @@ class AppointmentForm(FlaskForm):
     # Check that appointment isnt in the past
     def validate_date(form, field):
         if form.date.data <= date.today():
+            flash('Please choose a valid date')
             raise ValidationError("Please choose a valid date")
 
 
