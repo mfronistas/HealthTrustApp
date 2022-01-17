@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, error in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-danger in text-center" role="alert">
+            {% else %}
+              <div class="alert alert-success in text-center" role="alert">
+            {% endif %}
+              {{ error }}
+            </div>
+        {% endfor %}
+      {% endif %}
+  {% endwith %}
+</div>
+{% if not update_details %}
 <body>
 <div class="card p-2 mb-4 mx-auto bg-light border-primary border rounded-3 top-margin" style="width:1000px">
       <div class="container p-5 py-5">
@@ -43,9 +59,123 @@
                     </tr>
                 </tbody>
                 </table>
+                <form action="" method="POST">
+            <input type="hidden" name="update_details" value="1">
+                     <button class="btn btn-warning" name="update_detail" value="1">Update Details</button>
+            </form>
             </div>
         </div>
       </div>
 </div>
 </body>
+{% endif %}
+{% if update_details %}
+    <body>
+    <form method="POST" class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:800px;">
+    {{ form.csrf_token() }}
+<div class="card p-2 mb-4 mx-auto bg-light border-primary border rounded-3 top-margin" style="width:1000px">
+      <div class="container p-5 py-5">
+        <div class="column is-6 is-offset-3">
+            <h2 class="title fw-bold">Update Account Details</h2>
+            <div class="box">
+                <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Email</th>
+                        <th>{{ form.email(type="text" ,class="form-control", value=email  )}}
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}</th>
+                    </tr>
+                    <tr>
+                        <th>First Name</th>
+                        <th>{{ form.firstname(type="text", class="form-control", value=firstname) }}
+                            {% for error in form.firstname.errors %}
+                            {{ error }}
+                            {% endfor %}</th>
+                    </tr>
+                    <tr>
+                        <th>Last Name</th>
+                        <th>{{ form.lastname(type="text", class="form-control", value=lastname) }}
+                            {% for error in form.lastname.errors %}
+                            {{ error }}
+                            {% endfor %}</th>
+                    </tr>
+                    <tr>
+                        <th>Phone No.</th>
+                        <th>{{ form.phone(type="number", class="form-control", value=phone) }}
+                            {% for error in form.firstname.errors %}
+                            {{ error }}
+                            {% endfor %}</th>
+                    </tr>
+                    <tr>
+                        <th>Gender</th>
+                        <th>{{ form.gender(class="form-select", value=Gender) }}
+                            {% for error in form.gender.errors %}
+                            {{ error }}
+                            {% endfor %}</th>
+                    </tr>
+                    <tr>
+                        <th>Birthdate</th>
+                        <th>{{ form.birthdate(type="date" ,class="form-control", value=birthdate) }}
+            {% for error in form.birthdate.errors %}
+                {{ error }}
+            {% endfor %}</th>
+                    </tr>
+                    <tr>
+                        <th>NHS Number</th>
+                        <th>{{ form.nhs_number(type="text" ,class="form-control", value=nhs_number) }}
+            {% for error in form.nhs_number.errors %}
+                {{ error }}
+            {% endfor %}</th>
+                    </tr>
+                    <tr>
+                        <th>Street</th>
+                        <th>{{ form.street(type="text" ,class="form-control", value=street) }}
+            {% for error in form.street.errors %}
+                {{ error }}
+            {% endfor %}</th>
+                    </tr>
+                <tr>
+                        <th>Postcode</th>
+                        <th>{{ form.postcode(type="text" ,class="form-control", value=postcode) }}
+            {% for error in form.postcode.errors %}
+                {{ error }}
+            {% endfor %}</th>
+                    </tr>
+                <tr>
+                        <th>City</th>
+                        <th>{{ form.city(type="text" ,class="form-control", value=city) }}
+            {% for error in form.city.errors %}
+                {{ error }}
+            {% endfor %}</th>
+                    </tr>
+                <tr>
+                        <th>Password</th>
+                        <th>{{ form.password(type="password" ,value="s", class="form-control", placeholder="Password") }}
+            {% for error in form.password.errors %}
+                {{ error }}
+            {% endfor %}</th>
+                    </tr>
+                <tr>
+                        <th>Confirm Password</th>
+                        <th>{{ form.confirm_password(type="password" ,class="form-control", placeholder="Confirm Password") }}
+            {% for error in form.confirm_password.errors %}
+                {{ error }}
+            {% endfor %}</th>
+                    </tr>
+                </tbody>
+                </table>
+                <form action="" method="POST">
+            <input type="hidden" name="update_details" value="1">
+                     <button class="btn btn-warning" name="update_details" value="1">Update Details</button>
+            </form>
+            </div>
+        </div>
+      </div>
+</div>
+    </form>
+</body>
+    </div>
+    {% endif %}
 {% endblock %}
