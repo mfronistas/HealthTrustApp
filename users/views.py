@@ -10,7 +10,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request,
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail
 from app import db, requires_roles, mail
-from models import User, generate_key
+from models import User, generate_key, Prescription, Appointment, Medicine
 from users.forms import RegisterForm, LoginForm, ContactForm, RecoveryForm
 
 # CONFIG
@@ -120,6 +120,26 @@ def contact_us():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+# View prescriptions
+@users_blueprint.route('/perscriptions', methods=['POST', 'GET'])
+@login_required
+def view_prescriptions():
+    prescriptions = []
+    meds = Medicine.query.all()
+    appointments = Appointment.query.filter_by(patient_id=current_user.id).all()
+    for appoinment in appointments:
+        prescription = Prescription.query.filter_by(appointment_id=appoinment.id).first()
+        if prescription is not None:
+            prescriptions.append(prescription)
+
+
+
+
+
+
+
+    return render_template('prescriptionview.html', prescriptions=prescriptions, meds=meds)
 
 
 # view user account
