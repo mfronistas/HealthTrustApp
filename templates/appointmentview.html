@@ -42,27 +42,27 @@
                 <tbody>
                     <tr>
                         <th>Name</th>
-                        <th>{{ firstname, lastname }}</th>
+                        <th>{{ patient_data.firstname}} {{ patient_data.lastname  }}</th>
                     </tr>
                     <tr>
                         <th>Gender</th>
-                        <th>{{ gender }}</th>
+                        <th>{{ patient_data.gender }}</th>
                     </tr>
                     <tr>
                         <th>Birthdate</th>
-                        <th>{{ birthdate }}</th>
+                        <th>{{ patient_data.birthdate }}</th>
                     </tr>
                     <tr>
                         <th>NHS Number</th>
-                        <th>{{ nhs_number }}</th>
+                        <th>{{ patient_data.nhs_number }}</th>
                     </tr>
                     <tr>
                         <th>Phone</th>
-                        <th>{{ phone }}</th>
+                        <th>{{ patient_data.phone }}</th>
                     </tr>
                     <tr>
                         <th>Address</th>
-                        <th>{{ street, postcode, city }}</th>
+                        <th>{{ patient_data.street }}, {{ patient_data.city }}, {{ patient_data.postcode }}</th>
                     </tr>
                 </tbody>
                 </table>
