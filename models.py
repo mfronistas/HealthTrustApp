@@ -6,8 +6,6 @@ from sqlalchemy import Column, Integer, String
 from app import db
 from werkzeug.security import generate_password_hash
 import base64
-from Crypto.Protocol.KDF import scrypt
-from Crypto.Random import get_random_bytes
 from cryptography.fernet import Fernet
 
 
