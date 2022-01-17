@@ -81,5 +81,24 @@
         </div>
             </div>
         </div>
+<form class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:60%;">
+<div class="col-md-5">
+    <label for="inputMedicine" class="form-label">Medicine</label>
+    <select name="medicine" id="medicine" class="form-select">
+        {% for i in medicine %}
+      <option value="{{ i.name }}">{{ i.name }}
+      </option>
+        {% endfor %}
+    </select>
+</div>
+<div class="col-md-5">
+    <label for="inputPassword3" class="form-label">Instructions</label>
+    <input type="text" class="form-control" aria-label="Instructions">
+    <td>
+        <button class="btn btn-info mx-auto top-margin" name="step1" value='1'>
+            <span class="glyphicon glyphicon-trash"></span> Submit</button></td>
+    </td>
+</div>
+</form>
 </body>
 {% endblock %}
