@@ -20,7 +20,7 @@
       {% endif %}
   {% endwith %}
 </div>
-<div class="card border-primary border mx-auto" style="width:1500px;">
+<div class="card border-primary border mx-auto" style="width:80%;">
 <table class="table">
   <thead>
     <tr>
@@ -75,6 +75,7 @@
                     {% if patient.id == appointment.patient_id %}
                         <input type="hidden" name="view-patient" value="{{ patient.firstname }} {{ patient.lastname }}">
                     {% endif %}
+                    <input type="hidden" name="patient-email" value=" {{ patient.email }} ">
                 {% endfor %}
                 <input type="hidden" name="view-doctor" value="Dr {{ current_user.lastname }}">
                 {% endif %}
