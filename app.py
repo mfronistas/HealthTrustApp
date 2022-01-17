@@ -3,7 +3,7 @@ from flask import Flask, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from flask_login import LoginManager, current_user
-from flask_mail import Mail
+from flask_mail import Mail, Message
 
 
 # Function for custom decorator for roles
