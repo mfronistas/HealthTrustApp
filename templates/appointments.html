@@ -74,6 +74,7 @@
                 {% for patient in patients %}
                     {% if patient.id == appointment.patient_id %}
                         <input type="hidden" name="view-patient" value="{{ patient.firstname }} {{ patient.lastname }}">
+                        <input type="hidden" name="view-id" value="{{ patient.id }}">
                     {% endif %}
                     <input type="hidden" name="patient-email" value=" {{ patient.email }} ">
                 {% endfor %}

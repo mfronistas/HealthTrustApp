@@ -133,8 +133,12 @@ def view_appointment():
     patient = request.form.get("view-patient")
     doctor = request.form.get("view-doctor")
     hospital = request.form.get("view-hospital")
+    patient_id = request.form.get("view-id")
+    print(patient_id)
+    patient_data = User.query.filter_by(id=patient_id).first()
+    print(patient_data)
     return render_template('appointmentview.html', date=date, time=appointment_time,
-                           patient=patient, doctor=doctor, hospital=hospital)
+                           patient=patient, doctor=doctor, hospital=hospital, patient_data=patient_data)
 
 # Method to create timeslots and add them to a list
 def timeslots() -> list:
