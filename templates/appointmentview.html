@@ -2,7 +2,7 @@
 
 {% block content %}
 <body>
-<div class="card p-2 mb-4 mx-auto bg-light border-primary border rounded-3 top-margin" style="width:1000px">
+<div class="card p-2 mb-4 mx-auto bg-light border-primary border rounded-3 top-margin align-items-md-stretch padding" style="width:1000px">
       <div class="container p-5 py-5">
         <div class="column is-6 is-offset-3">
             <h2 class="title fw-bold">Your Appointment</h2>
@@ -34,6 +34,52 @@
             </div>
         </div>
       </div>
+    <div class="container p-5 py-5">
+        <div class="column is-6 is-offset-3">
+            <h2 class="title fw-bold">Patient details</h2>
+            <div class="box">
+                <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <th>{{ firstname, lastname }}</th>
+                    </tr>
+                    <tr>
+                        <th>Gender</th>
+                        <th>{{ gender }}</th>
+                    </tr>
+                    <tr>
+                        <th>Birthdate</th>
+                        <th>{{ birthdate }}</th>
+                    </tr>
+                    <tr>
+                        <th>NHS Number</th>
+                        <th>{{ nhs_number }}</th>
+                    </tr>
+                    <tr>
+                        <th>Phone</th>
+                        <th>{{ phone }}</th>
+                    </tr>
+                    <tr>
+                        <th>Address</th>
+                        <th>{{ street, postcode, city }}</th>
+                    </tr>
+                </tbody>
+                </table>
+                <a class="btn bg-primary text-white" role="button" href="#">Add Prescription</a>
+            </div>
+      </div>
+
 </div>
+    <div class="card mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:60%;">
+                <div class="row mb-3">
+                    <label for="inputPassword3" class="col-sm-2 col-form-label">Notes</label>
+                    <input type="text" id="notes" name="notes" placeholder="Notes">
+                    </div>
+                <div>
+                    <div class="btn bg-primary text-white">Submit</div>
+        </div>
+            </div>
+        </div>
 </body>
 {% endblock %}
