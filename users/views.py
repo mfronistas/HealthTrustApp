@@ -88,7 +88,7 @@ def login():
         if current_user.role == 'admin':
             return redirect(url_for('admin.admin'))
         elif current_user.role == 'doctor':
-            return redirect(url_for('admin.doctor'))
+            return redirect(url_for('appointment.appointment'))
         else:
             return redirect(url_for('users.account'))
 
