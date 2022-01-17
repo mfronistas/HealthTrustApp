@@ -3,7 +3,8 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 import datetime
 from datetime import time
-from app import db, requires_roles
+from flask_mail import Mail, Message
+from app import db, requires_roles, mail
 from flask_login import login_required, current_user
 from models import Appointment, User, Hospital
 # CONFIG
@@ -39,6 +40,33 @@ def appointment():
                                doctors=User.query.filter_by(role='doctor'),
                                hospitals=Hospital.query.all())
     elif current_user.role == 'doctor':
+        if cancel:
+
+            appointment = Appointment.query.filter_by(id=cancel).first()
+            user = User.query.filter_by(id=appointment.patient_id).first()
+            email = user.email
+            date = appointment.date
+            doctor = User.query.filter_by(id=appointment.doctor_id).first()
+            phone = doctor.phone
+
+            try:
+                msg = Message(subject='Health Trust Appointment Canceled', sender='healthtrust.contact@gmail.com',
+                              recipients=[email])
+                msg.body = 'Appointment Date: {date}  \n' \
+                           'Canceled by the doctor\n' \
+                           'Please contact Dr.{doctor} using this number {phone}'.format(date=date,
+                                                                                      doctor=doctor.lastname,
+                                                                                      phone=phone)
+                mail.send(msg)
+                Appointment.query.filter_by(id=cancel).delete()
+                db.session.commit()
+                flash('Appointment canceled')
+
+                return redirect(url_for('appointment.appointment'))
+
+            except:
+                raise Exception('Appointment not in database')
+
         return render_template('appointments.html',
                                appointments=Appointment.query.filter_by(doctor_id=current_user.id)
                                .order_by(Appointment.date.asc(), Appointment.time.asc()),
