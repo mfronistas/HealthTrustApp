@@ -21,6 +21,7 @@
   {% endwith %}
 </div>
 <div class="card border-primary border mx-auto" style="width:30%;">
+{% if current_user.role == 'patient' %}
 <table class="table">
   <thead>
     <tr>
@@ -42,22 +43,46 @@
                 {% endif %}
                 {% endfor %}
                 <td>{{ prescription.instructions}}</td>
-            <form method="post" action="{{ url_for('appointment.view_appointment') }}">
-            </form>
-
-
-
-
-
-
-
         </tr>
     {% endfor %}
+{% endif %}
+{% if current_user.role == 'doctor' %}
+<table class="table">
+  <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Medicine</th>
+        <th scope="col">Instructions</th>
+        <th> </th>
+        <th> </th>
 
+    </tr>
+  </thead>
+  <tbody>
 
-  </tbody>
+    {% for prescription in prescriptions %}
+
+        <tr>
+            <th scope="row">{{ prescription.id }}</th>
+            {% for med in meds %}
+            {% if med.id == prescription.medicine_id %}
+                <td>{{ med.name }}</td>
+                {% endif %}
+                {% endfor %}
+                <td>{{ prescription.instructions}}</td>
+        <form action="" method="POST">
+            <input type="hidden" name="valuecancel" value="{{prescription.id}}">
+            <td><button class="btn btn-danger" type="submit" name="cancel" value={{ prescription.id }}>Cancel</button>
+            </td>
+            </form>
+        </tr>
+    {% endfor %}
+{% endif %}
+
 
 </table>
+    </tbody>
+    </table>
 </div>
 </div>
 </body>

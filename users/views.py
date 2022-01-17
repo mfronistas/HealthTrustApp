@@ -127,14 +127,34 @@ def logout():
 @login_required
 def view_prescriptions():
     prescriptions = []
+    cancel = request.form.get('valuecancel')
+    all_appointments = Appointment.query.all()
     meds = Medicine.query.all()
-    appointments = Appointment.query.filter_by(patient_id=current_user.id).all()
-    for appoinment in appointments:
-        prescription = Prescription.query.filter_by(appointment_id=appoinment.id).first()
-        if prescription is not None:
-            prescriptions.append(prescription)
+    patients = User.query.all()
+    if current_user.role == 'patient':
+        appointments = Appointment.query.filter_by(patient_id=current_user.id).all()
+        for appoinment in appointments:
+            prescription = Prescription.query.filter_by(appointment_id=appoinment.id).first()
+            if prescription is not None:
+                prescriptions.append(prescription)
+    elif current_user.role == 'doctor':
+        if cancel:
+            try:
+                Prescription.query.filter_by(id=cancel).delete()
+                db.session.commit()
+                flash('Prescription canceled')
+                return redirect(url_for('users.view_prescriptions'))
 
-    return render_template('prescriptionview.html', prescriptions=prescriptions, meds=meds)
+            except:
+                raise Exception('Prescription not in database')
+        appointments = Appointment.query.filter_by(doctor_id=current_user.id).all()
+        for appoinment in appointments:
+            prescription = Prescription.query.filter_by(appointment_id=appoinment.id).first()
+            if prescription is not None:
+                prescriptions.append(prescription)
+
+    return render_template('prescriptionview.html', prescriptions=prescriptions, meds=meds, patients=patients,
+                           appointments=all_appointments)
 
 
 # view user account
