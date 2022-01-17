@@ -121,6 +121,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 # View prescriptions
 @users_blueprint.route('/perscriptions', methods=['POST', 'GET'])
 @login_required
@@ -133,19 +134,46 @@ def view_prescriptions():
         if prescription is not None:
             prescriptions.append(prescription)
 
-
-
-
-
-
-
     return render_template('prescriptionview.html', prescriptions=prescriptions, meds=meds)
 
 
 # view user account
-@users_blueprint.route('/account')
+@users_blueprint.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
+    update = request.form.get('update_details')
+    if update:
+        form = RegisterForm()
+        if form.validate_on_submit():
+            user = User.query.filter_by(id=current_user.id).first()
+            user.firstname = form.firstname.data
+            user.lastname = form.lastname.data
+            user.gender = form.gender.data
+            user.birthdate = form.birthdate.data
+            user.role = current_user.role
+            user.nhs_number = form.nhs_number.data
+            user.phone = form.phone.data
+            user.street = form.street.data
+            user.postcode = form.postcode.data
+            user.city = form.city.data
+            user.email = form.email.data
+            user.password = form.password.data
+            user.encryption_key = current_user.encryption_key
+            db.session.commit()
+            flash('Account details have been updated')
+            print(user)
+            return redirect(url_for('users.account'))
+        return render_template('account.html',
+                               firstname=current_user.firstname,
+                               lastname=current_user.lastname,
+                               gender=current_user.gender,
+                               birthdate=current_user.birthdate,
+                               nhs_number=current_user.nhs_number,
+                               phone=current_user.phone,
+                               street=current_user.street,
+                               postcode=current_user.postcode,
+                               city=current_user.city,
+                               email=current_user.email, update_details=update, form=form)
     return render_template('account.html',
                            firstname=current_user.firstname,
                            lastname=current_user.lastname,
