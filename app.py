@@ -1,10 +1,25 @@
 # IMPORTS
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from flask_login import LoginManager, current_user
 from flask_mail import Mail, Message
+import logging
 
+# logging
+class SecurityFilter(logging.Filter):
+    def filter(self, record):
+        return 'SECURITY' in record.getMessage()
+
+fh = logging.FileHandler('healthtrust.log', 'w')
+fh.setLevel(logging.WARNING)
+fh.addFilter(SecurityFilter())
+formatter = logging.Formatter('%(asctime)s : %(message)s', '%m/%d/%Y %I:%M:%S %p')
+fh.setFormatter(formatter)
+
+logger = logging.getLogger('')
+logger.propagate = False
+logger.addHandler(fh)
 
 # Function for custom decorator for roles
 def requires_roles(*roles):
@@ -12,6 +27,11 @@ def requires_roles(*roles):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if current_user.role not in roles:
+                logging.warning('SECURITY - Unauthorized access attempt [%s, %s, %s, %s]',
+                                current_user.id,
+                                current_user.username,
+                                current_user.role,
+                                request.remote_addr)
                 # Redirect the user to an unauthorised notice
                 return render_template('403.html')
             return f(*args, **kwargs)
