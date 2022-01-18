@@ -11,20 +11,10 @@ import base64
 from cryptography.fernet import Fernet
 
 
-# Function to encrypt data
-def encrypt(data, encryption_key):
-    return Fernet(encryption_key).encrypt(bytes(data, 'utf-8'))
-
-
 # Function that generates encryption key
 def generate_pinkey():
     key = pyotp.random_base32()
     return key
-
-
-# Function to decrypt data
-def decrypt(data, encryption_key):
-    return Fernet(encryption_key).decrypt(data).decode('utf-8')
 
 
 # Class User
@@ -72,7 +62,7 @@ class User(db.Model, UserMixin):
         self.email = email
         # Generating password hash
         self.password = generate_password_hash(password)
-        self.encryption_key = encryption_key
+        self.encryption_key = generate_pinkey()
         self.registered_on = datetime.now()
         self.last_logged_in = None
         self.current_logged_in = None
@@ -177,6 +167,6 @@ def init_db():
     db.session.commit()
 
 def create_appointment():
-    appointment = Appointment(patient_id=1, doctor_id=2, date=date(2022, 1, 23), time=time(9, 00), notes="", site_id=2)
+    appointment = Appointment(patient_id=1, doctor_id=2, date=date(2022, 1, 15), time=time(9, 00), notes="", site_id=2)
     db.session.add(appointment)
     db.session.commit()
