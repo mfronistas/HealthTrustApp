@@ -141,16 +141,18 @@ def view_appointment():
     patient_data = User.query.filter_by(id=patient_id).first()
     medicines = Medicine.query.all()
     medicine = request.form.get('medicine')
-    prescriptions = Prescription.query.filter_by(appointment_id=appointment_id).all()
     if form.validate_on_submit():
         new_prescription = Prescription(medicine_id=medicine, appointment_id=appointment_id,
                                         instructions=form.instructions.data)
         db.session.add(new_prescription)
         db.session.commit()
+        form.instructions.data = ''
     if form2.validate_on_submit():
         curr_appointment = Appointment.query.filter_by(id=appointment_id).first()
         curr_appointment.notes = form2.notes.data
         db.session.commit()
+        form2.notes.data = ''
+    prescriptions = Prescription.query.filter_by(appointment_id=appointment_id).all()
     return render_template('appointmentview.html', date=date, time=appointment_time, prescriptions=prescriptions,
                            patient=patient, doctor=doctor, hospital=hospital, patient_data=patient_data,
                            medicine=medicines, form=form, form2=form2,
