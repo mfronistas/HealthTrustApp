@@ -48,7 +48,7 @@ class User(db.Model, UserMixin):
 
     # User constructor
     def __init__(self, firstname, lastname, gender, birthdate, role, nhs_number, phone, street, postcode, city, email,
-                 password, encryption_key):
+                 password):
         self.firstname = firstname
         self.lastname = lastname
         self.gender = gender
