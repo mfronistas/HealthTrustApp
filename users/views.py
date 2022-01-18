@@ -86,30 +86,62 @@ def register():
 @users_blueprint.route('/login', methods=['POST', 'GET'])
 def login():
 
+    # if session attribute logins doesnt exist create new attribute logins
+    if not session.get('logins'):
+        session['logins'] = 0
+    # if login attempts is more than 3 return error message
+    elif session.get('logins') >= 3:
+        flash('Number of incorrect logins exceeded', 'error')
+
     form = LoginForm()
 
     if form.validate_on_submit():
 
-        user = User.query.filter_by(email=form.email.data).first()
-        enc = user.encryption_key
-        if not user or not check_password_hash(user.password, form.password.data):
-            flash('Incorrect login', 'error')
-            return render_template('login.html', form=form)
-        if pyotp.TOTP(enc).verify(form.pin.data):
-            login_user(user)
+        # increase login attempts by 1
+        session['logins'] += 1
 
+        user = User.query.filter_by(email=form.email.data).first()
+        if not user or not check_password_hash(user.password, form.password.data):
+            # if user not authenticated, return error message depending on login attempts
+            if session['logins'] == 3:
+                flash('Number of incorrect login attempts exceeded', 'error')
+                # Security warning for when a user tries to log in 3 times unsuccessfully
+
+            elif session['logins'] == 2:
+                flash('Please check your login details and try again. 1 login attempt remaining', 'error')
+                # Security warning for when a user tries to log in 2 times unsuccessfully
+
+            elif session['logins'] == 1:
+                flash('Please check your login details and try again. 2 login attempt remaining', 'error')
+                # Security warning for when a user tries to log in once unsuccessfully
+
+            else:
+                flash('Please check your login details and try again', 'error')
+                # Security warning for when a user tries to log in unsuccessfully
+
+
+            return render_template('login.html', form=form)
+
+        # If user 2FA is valid
+        if pyotp.TOTP(user.encryption_key).verify(form.pin.data):
+            # if user is verified reset login attempts
+            session['logins'] = 0
+            login_user(user)
+            # if user logs in, transfer the date and time to last logged in
             user.current_logged_in = datetime.now()
+            # Get current datetime for when the user logs in
             user.last_logged_in = user.current_logged_in
             db.session.add(user)
             db.session.commit()
+            # Redirect to appropriate page according to role
             if current_user.role == 'admin':
                 return redirect(url_for('admin.admin'))
             elif current_user.role == 'doctor':
                 return redirect(url_for('appointment.appointment'))
             else:
                 return redirect(url_for('users.account'))
-            # If user enters invalid 2FA code return error
-        if not pyotp.TOTP(enc).verify(form.pin.data):
+        # If user enters invalid 2FA code return error
+        if not pyotp.TOTP(user.encryption_key).verify(form.pin.data):
             flash('Incorrect Pinkey', 'error')
 
     return render_template('login.html', form=form)
