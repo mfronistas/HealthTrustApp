@@ -67,9 +67,10 @@
                     </tr>
                 </tbody>
                 </table>
-                <form method="POST" action="{{ url_for('appointment.view_appointment') }}" class="row g-3 mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:60%;">
+
+                <form method="POST" action="{{ url_for('appointment.view_appointment') }}" class="row g-3 mx-auto p-3 text-primary" style="width:70%;">
                 {{ form.csrf_token() }}
-                <div class="col-md-5">
+                <div class="col-md-5" style="width:70%;">
                     <label for="inputMedicine" class="form-label">Medicine</label>
                     <select name="medicine" id="medicine" class="form-select">
                         {% for i in medicine %}
@@ -78,9 +79,9 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-5" style="width:100%;">
                     <label for="inputPassword3" class="form-label">Instructions</label>
-                    {{ form.instructions(class="form-control", placeholder="Instructions") }}
+                    {{ form.instructions(class="form-control", placeholder="Instructions", rows="3") }}
                     <td>
                         <button class="btn bg-primary text-white mx-auto top-margin" type="submit"
                                 name="view" value="{{ appointment_id }}">Add Prescription</button>
@@ -93,6 +94,7 @@
                     </td>
                 </div>
                 </form>
+
             </div>
         </div>
     </div>
@@ -105,6 +107,7 @@
         <th scope="col">#</th>
         <th scope="col">Medicine</th>
         <th scope="col">Instructions</th>
+
     </tr>
   </thead>
   <tbody>
@@ -118,6 +121,18 @@
                 {% endif %}
             {% endfor %}
             <td>{{ prescription.instructions }}</td>
+        <form action="" method="POST">
+            <input type="hidden" name="valuecancel" value="{{ prescription.id }}">
+            <td><button class="btn btn-danger" type="submit" name="cancel" value="{{ prescription.id }}">Cancel</button>
+                <input type="hidden" name="view-date" value="{{ date }}">
+                        <input type="hidden" name="view-time" value="{{ time }}">
+                        <input type="hidden" name="view-patient" value="{{ patient }}">
+                        <input type="hidden" name="view-doctor" value="{{ doctor }}">
+                        <input type="hidden" name="view-hospital" value="{{ hospital }}">
+                        <input type="hidden" name="view-id" value="{{ patient_id }}">
+                        <input type="hidden" name="view" value="{{ appointment_id }}">
+            </td>
+            </form>
         </tr>
     {% endfor %}
 
@@ -129,10 +144,10 @@
 {% if current_user.role == 'doctor' %}
     <form method="POST" action="{{ url_for('appointment.view_appointment') }}">
     {{ form2.csrf_token() }}
-    <div class="card mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:60%;">
+    <div class="mx-auto p-3 text-primary" style="width:59%;">
         <div class="row mb-3">
             <label for="inputPassword3" class="col-form-label">Appointment Notes</label>
-            {{ form2.notes(class="form-control", placeholder="Notes") }}
+            {{ form2.notes(class="form-control", placeholder="Notes", rows="3") }}
         </div>
         <div>
             <button class="btn bg-primary text-white mx-auto top-margin" type="submit"
@@ -144,6 +159,7 @@
                         <input type="hidden" name="view-hospital" value="{{ hospital }}">
                         <input type="hidden" name="view-id" value="{{ patient_id }}">
         </div>
+
     </div>
     </form>
 {% endif %}

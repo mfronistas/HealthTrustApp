@@ -141,6 +141,16 @@ def view_appointment():
     patient_data = User.query.filter_by(id=patient_id).first()
     medicines = Medicine.query.all()
     medicine = request.form.get('medicine')
+    cancel = request.form.get('valuecancel')
+    if cancel:
+        try:
+            Prescription.query.filter_by(id=cancel).delete()
+            db.session.commit()
+
+
+        except:
+            raise Exception('Prescription not in database')
+
     if form.validate_on_submit():
         new_prescription = Prescription(medicine_id=medicine, appointment_id=appointment_id,
                                         instructions=form.instructions.data)
