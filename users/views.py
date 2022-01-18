@@ -176,8 +176,9 @@ def logout():
 
 
 # View prescriptions
-@users_blueprint.route('/perscriptions', methods=['POST', 'GET'])
+@users_blueprint.route('/prescriptions', methods=['POST', 'GET'])
 @login_required
+@requires_roles('doctor', 'patient')
 def view_prescriptions():
     prescriptions = []
     cancel = request.form.get('valuecancel')
