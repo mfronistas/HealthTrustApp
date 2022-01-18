@@ -67,6 +67,7 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Email()])
     password = PasswordField(validators=[InputRequired()])
+    pin = StringField(validators=[InputRequired(), Length(min=6, max=6, message='Pin must be 6 digits long')])
     submit = SubmitField()
 
 
