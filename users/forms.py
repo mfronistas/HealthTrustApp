@@ -119,12 +119,12 @@ class MedicineForm(FlaskForm):
 
 # UPDATE NOTES FORM
 class UpdateNotesForm(FlaskForm):
-    notes = StringField(validators=[InputRequired()])
+    notes = TextAreaField(validators=[InputRequired()])
 
 
 # PRESCRIPTION FORM
 class PrescriptionForm(FlaskForm):
-    instructions = StringField(validators=[InputRequired()])
+    instructions = TextAreaField(validators=[InputRequired()])
     submit = SubmitField()
 
 

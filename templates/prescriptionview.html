@@ -20,7 +20,7 @@
       {% endif %}
   {% endwith %}
 </div>
-<div class="card border-primary border mx-auto" style="width:30%;">
+<div class="card border-primary border mx-auto" style="width:50%;">
 {% if current_user.role == 'patient' %}
 <table class="table">
   <thead>
@@ -70,11 +70,13 @@
                 {% endfor %}
             <td>{{ prescription.instructions}}</td>
             {% for appointment in appointments %}
-                {% for patient in patients %}
-                    {% if patient.id == appointment.patient_id %}
-                        <td>{{ patient.firstname }} {{ patient.lastname }}</td>
-                    {% endif %}
-                {% endfor %}
+                {% if appointment.id == prescription.appointment_id %}
+                    {% for patient in patients %}
+                        {% if patient.id == appointment.patient_id %}
+                            <td>{{ patient.firstname }} {{ patient.lastname }}</td>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
         <form action="" method="POST">
             <input type="hidden" name="valuecancel" value="{{prescription.id}}">
