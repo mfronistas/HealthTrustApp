@@ -8,7 +8,7 @@ from app import db, requires_roles, mail
 from flask_login import login_required, current_user
 from models import Appointment, User, Hospital, Medicine, Prescription
 # CONFIG
-from users.forms import AppointmentForm, PrescriptionForm
+from users.forms import AppointmentForm, PrescriptionForm, UpdateNotesForm
 
 appointment_blueprint = Blueprint('appointment', __name__, template_folder='templates')
 
@@ -130,6 +130,7 @@ def book_appointment():
 @login_required
 def view_appointment():
     form = PrescriptionForm()
+    form2 = UpdateNotesForm()
     date = request.form.get("view-date")
     appointment_time = request.form.get("view-time")
     appointment_id = request.form.get("view")
@@ -146,9 +147,14 @@ def view_appointment():
                                         instructions=form.instructions.data)
         db.session.add(new_prescription)
         db.session.commit()
+    if form2.validate_on_submit():
+        curr_appointment = Appointment.query.filter_by(id=appointment_id).first()
+        curr_appointment.notes = form2.notes.data
+        db.session.commit()
     return render_template('appointmentview.html', date=date, time=appointment_time, prescriptions=prescriptions,
                            patient=patient, doctor=doctor, hospital=hospital, patient_data=patient_data,
-                           medicine=medicines, form=form, patient_id=patient_id, appointment_id=appointment_id)
+                           medicine=medicines, form=form, form2=form2,
+                           patient_id=patient_id, appointment_id=appointment_id)
 
 
 # Method to create timeslots and add them to a list

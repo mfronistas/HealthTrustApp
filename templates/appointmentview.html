@@ -127,15 +127,25 @@
 </div>
 {% endif %}
 {% if current_user.role == 'doctor' %}
+    <form method="POST" action="{{ url_for('appointment.view_appointment') }}">
+    {{ form2.csrf_token() }}
     <div class="card mx-auto p-3 bg-white text-primary border-primary border rounded-3" style="width:60%;">
         <div class="row mb-3">
             <label for="inputPassword3" class="col-form-label">Appointment Notes</label>
-            <input type="text" id="notes" name="notes" placeholder="Notes">
+            {{ form2.notes(class="form-control", placeholder="Notes") }}
         </div>
         <div>
-            <div class="btn bg-primary text-white">Submit</div>
+            <button class="btn bg-primary text-white mx-auto top-margin" type="submit"
+                                name="view" value="{{ appointment_id }}">Update Notes</button>
+                        <input type="hidden" name="view-date" value="{{ date }}">
+                        <input type="hidden" name="view-time" value="{{ time }}">
+                        <input type="hidden" name="view-patient" value="{{ patient }}">
+                        <input type="hidden" name="view-doctor" value="{{ doctor }}">
+                        <input type="hidden" name="view-hospital" value="{{ hospital }}">
+                        <input type="hidden" name="view-id" value="{{ patient_id }}">
         </div>
     </div>
+    </form>
 {% endif %}
 </div>
 </body>
