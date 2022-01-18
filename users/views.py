@@ -59,6 +59,7 @@ def register():
         # add the new user to the database
         db.session.add(new_user)
         db.session.commit()
+        logging.warning('SECURITY - User registration [%s, %s]', form.email.data, request.remote_addr)
 
         # Send email to new user created to set up 2 factor authenticator
 
@@ -133,6 +134,8 @@ def login():
             user.last_logged_in = user.current_logged_in
             db.session.add(user)
             db.session.commit()
+            logging.warning('SECURITY - Log in [%s, %s, %s]', current_user.id, current_user.username,
+                     request.remote_addr)
             # Redirect to appropriate page according to role
             if current_user.role == 'admin':
                 return redirect(url_for('admin.admin'))
@@ -171,6 +174,7 @@ def contact_us():
 @users_blueprint.route('/logout')
 @login_required
 def logout():
+    logging.warning('SECURITY - Log out [%s, %s, %s]', current_user.id, current_user.username, request.remote_addr)
     logout_user()
     return redirect(url_for('index'))
 
