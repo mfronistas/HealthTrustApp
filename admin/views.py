@@ -14,7 +14,11 @@ admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 @login_required
 @requires_roles('admin')
 def admin():
-    return render_template('adminhome.html')
+    with open("healthtrust.log", "r") as f:
+        content = f.read().splitlines()[-10:]
+        content.reverse()
+
+    return render_template('adminhome.html', logs=content)
 
 
 # Page to view all doctors
