@@ -10,7 +10,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request,
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Mail
 from app import db, requires_roles, mail
-from models import User, generate_key, Prescription, Appointment, Medicine
+from models import User, generate_pinkey, Prescription, Appointment, Medicine
 from users.forms import RegisterForm, LoginForm, ContactForm, RecoveryForm
 
 # CONFIG
@@ -53,12 +53,28 @@ def register():
                         city=form.city.data,
                         email=form.email.data,
                         password=form.password.data,
-                        encryption_key=generate_key()
+                        encryption_key=generate_pinkey()
                         )
 
         # add the new user to the database
         db.session.add(new_user)
         db.session.commit()
+
+        # Send email to new user created to set up 2 factor authenticator
+
+        msg = Message(subject='Activate 2 Factor Authentication', sender='healthtrust.contact@gmail.com',
+                      recipients=[new_user.email])
+        msg.body = 'PIN Key: {pinkey}\n\n' \
+                   'For Account: {email}\n\n' \
+                   '--Set up One Time Password generator--\n\n' \
+                   '1) Download Authy on your device, https://authy.com/download/\n\n' \
+                   '2) Select add new account\n\n' \
+                   '3) Enter your PIN key\n\n' \
+                   '4) Enter name for new account\n\n' \
+                   '5) Select token length of 6\n\n' \
+                   '6) Use the generated codes to log in your account'.format(email=new_user.email,
+                                                                              pinkey=new_user.encryption_key)
+        mail.send(msg)
 
         # sends user to login page
         return redirect(url_for('users.login'))
@@ -69,28 +85,32 @@ def register():
 # Login user
 @users_blueprint.route('/login', methods=['POST', 'GET'])
 def login():
+
     form = LoginForm()
 
     if form.validate_on_submit():
 
         user = User.query.filter_by(email=form.email.data).first()
-
+        enc = user.encryption_key
         if not user or not check_password_hash(user.password, form.password.data):
             flash('Incorrect login', 'error')
             return render_template('login.html', form=form)
+        if pyotp.TOTP(enc).verify(form.pin.data):
+            login_user(user)
 
-        login_user(user)
-
-        user.current_logged_in = datetime.now()
-        user.last_logged_in = user.current_logged_in
-        db.session.add(user)
-        db.session.commit()
-        if current_user.role == 'admin':
-            return redirect(url_for('admin.admin'))
-        elif current_user.role == 'doctor':
-            return redirect(url_for('appointment.appointment'))
-        else:
-            return redirect(url_for('users.account'))
+            user.current_logged_in = datetime.now()
+            user.last_logged_in = user.current_logged_in
+            db.session.add(user)
+            db.session.commit()
+            if current_user.role == 'admin':
+                return redirect(url_for('admin.admin'))
+            elif current_user.role == 'doctor':
+                return redirect(url_for('appointment.appointment'))
+            else:
+                return redirect(url_for('users.account'))
+            # If user enters invalid 2FA code return error
+        if not pyotp.TOTP(enc).verify(form.pin.data):
+            flash('Incorrect Pinkey', 'error')
 
     return render_template('login.html', form=form)
 
@@ -103,6 +123,7 @@ def contact_us():
     # if request method is POST or form is valid
     if form.validate_on_submit():
         # msg is emailed to admin
+        #TODO change email to an admin email
         msg = Message(subject=form.subject.data, sender='healthtrust.contact@gmail.com',
                       recipients=['ackermandlevi@gmail.com'])
         msg.body = 'CONTACT US ENQUIRY\n' \
