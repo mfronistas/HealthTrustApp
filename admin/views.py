@@ -154,11 +154,3 @@ def add_hospital():
         return redirect(url_for('admin.view_all_hospitals'))
     return render_template('addhospital.html', form=form, add_hos=True)
 
-
-# Method to view all appointments
-@admin_blueprint.route('/timetable', methods=['POST', 'GET'])
-@login_required
-@requires_roles('admin', 'doctor')
-def view_all_appointments():
-    return render_template('timetable.html', cur_appointments=Appointment.query.all())
-

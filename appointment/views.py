@@ -128,6 +128,7 @@ def book_appointment():
 
 @appointment_blueprint.route('/appointmentview', methods=['POST', 'GET'])
 @login_required
+@requires_roles('patient', 'doctor')
 def view_appointment():
     form = PrescriptionForm()
     form2 = UpdateNotesForm()
@@ -205,7 +206,7 @@ def findDoctor(date, time) -> User:
 
         # if length of appointments is less than min_appointments
         if len(appointments) < min_appointments:
-            # If doctor doesnt have an appoitnemtn at that time
+            # If doctor doesnt have an appointment at that time
             if not Appointment.query.filter_by(doctor_id=doctor.id, date=date, time=time).first():
                 min_appointments = len(appointments)
                 index = doctor
