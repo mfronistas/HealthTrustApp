@@ -68,10 +68,11 @@ def appointment():
                 raise Exception('Appointment not in database')
 
         return render_template('appointments.html',
-                               appointments=Appointment.query.filter_by(doctor_id=current_user.id)
+                               appointments=Appointment.query.filter_by(doctor_id=current_user.id, notes='pending')
                                .order_by(Appointment.date.asc(), Appointment.time.asc()),
                                patients=User.query.filter_by(role='patient'),
-                               hospitals=Hospital.query.all())
+                               hospitals=Hospital.query.all(),
+                               old_appointments=Appointment.query.filter(Appointment.notes != 'pending'))
 
 
 
