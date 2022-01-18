@@ -23,23 +23,23 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mx-auto mb-2 mb-lg-0 margin-0">
             <li class="nav-item">
-              <a class="nav-link active" href="{{ url_for('index') }}"><b><u>Home</u></b></a>
+              <a class="nav-link active" href="{{ url_for('index') }}"><b>Home</b></a>
             </li>
           {% if not current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('users.login') }}"><b><u>Login</u></b></a>
+                <a class="nav-link active" href="{{ url_for('users.login') }}"><b>Login</b></a>
             </li>
           {% endif %}
           {% if not current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('users.register') }}"><b><u>Register</u></b></a>
+                <a class="nav-link active" href="{{ url_for('users.register') }}"><b>Register</b></a>
             </li>
           {% endif %}
               {% if current_user.is_authenticated and (current_user.role=='patient' or current_user.role=='doctor' )%}
             <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {% if current_user.role=='patient' %} <b><u>My Account</u></b> {% endif %}
-                  {% if current_user.role=='doctor' %} <b><u>Manage Appointments</u></b> {% endif %}
+                  {% if current_user.role=='patient' %} <b>My Account</b> {% endif %}
+                  {% if current_user.role=='doctor' %} <b>Manage Appointments</b> {% endif %}
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 {% if current_user.role=='patient' %}
@@ -57,7 +57,7 @@
             {% if current_user.is_authenticated and current_user.role =='admin' %}
              <li class="nav-item dropdown">
               <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <b><u>Admin</u></b>
+                  <b>Admin</b>
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="{{ url_for('admin.view_all_doctors') }}">Add/View Doctor</a></li>
@@ -70,12 +70,12 @@
               {% endif %}
             {% if not current_user.is_authenticated or current_user.role == 'patient' %}
             <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('users.contact_us') }}"><b><u>Contact Us</u></b></a>
+                <a class="nav-link active" href="{{ url_for('users.contact_us') }}"><b>Contact Us</b></a>
             </li>
             {% endif %}
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('users.logout') }}"><b><u>Log Out</u></b></a>
+                <a class="nav-link active" href="{{ url_for('users.logout') }}"><b>Log Out</b></a>
             </li>
             {% endif %}
           </ul>

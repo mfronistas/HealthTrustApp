@@ -166,6 +166,8 @@ def init_db():
     db.session.add(medicine)
     db.session.commit()
 
+
+# Function to create an appointment.
 def create_appointment():
     appointment = Appointment(patient_id=1, doctor_id=2, date=date(2022, 1, 15), time=time(9, 00), notes="", site_id=2)
     db.session.add(appointment)

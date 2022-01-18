@@ -107,18 +107,26 @@ def login():
             if session['logins'] == 3:
                 flash('Number of incorrect login attempts exceeded', 'error')
                 # Security warning for when a user tries to log in 3 times unsuccessfully
+                logging.warning('SECURITY - Log in attempt 3[%s, %s]', form.email.data,
+                                request.remote_addr)
 
             elif session['logins'] == 2:
                 flash('Please check your login details and try again. 1 login attempt remaining', 'error')
                 # Security warning for when a user tries to log in 2 times unsuccessfully
+                logging.warning('SECURITY - Log in attempt 2[%s, %s]', form.email.data,
+                                request.remote_addr)
 
             elif session['logins'] == 1:
                 flash('Please check your login details and try again. 2 login attempt remaining', 'error')
                 # Security warning for when a user tries to log in once unsuccessfully
+                logging.warning('SECURITY - Log in attempt 1[%s, %s]', form.email.data,
+                                request.remote_addr)
 
             else:
                 flash('Please check your login details and try again', 'error')
                 # Security warning for when a user tries to log in unsuccessfully
+                logging.warning('SECURITY - Log in [%s, %s]', form.email.data,
+                                request.remote_addr)
 
 
             return render_template('login.html', form=form)
@@ -134,7 +142,7 @@ def login():
             user.last_logged_in = user.current_logged_in
             db.session.add(user)
             db.session.commit()
-            logging.warning('SECURITY - Log in [%s, %s, %s]', current_user.id, current_user.username,
+            logging.warning('SECURITY - Log in [%s, %s, %s]', current_user.id, current_user.email,
                      request.remote_addr)
             # Redirect to appropriate page according to role
             if current_user.role == 'admin':
@@ -174,7 +182,7 @@ def contact_us():
 @users_blueprint.route('/logout')
 @login_required
 def logout():
-    logging.warning('SECURITY - Log out [%s, %s, %s]', current_user.id, current_user.username, request.remote_addr)
+    logging.warning('SECURITY - Log out [%s, %s, %s]', current_user.id, current_user.email, request.remote_addr)
     logout_user()
     return redirect(url_for('index'))
 
@@ -305,6 +313,7 @@ def recover():
                 user = User.query.filter_by(email=email).first()
                 user.password = generate_password_hash(form.password.data)
                 db.session.commit()
+                logging.warning('SECURITY - Account Recovered [%s, %s, %s]', current_user.id, current_user.email)
                 return redirect(url_for('users.login'))
 
             return render_template('password.html', form=form, step1=False, step2='1', cur_email=email,
