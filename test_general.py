@@ -29,7 +29,7 @@ def test_HospitalModel():
 
 
 def test_AppointmentModel():
-    appointment = Appointment(patient_id=1, doctor_id='2', date=date(2022, 11, 24), time=time(14, 15),
+    appointment = Appointment(patient_id=1, doctor_id=2, date=date(2022, 11, 24), time=time(14, 15),
                               notes='pending', site_id=1)
     assert appointment.patient_id == 1
     assert appointment.doctor_id == 2
