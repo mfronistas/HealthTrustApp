@@ -1,5 +1,7 @@
 # IMPORTS
 from datetime import datetime, date, time
+
+import pyotp
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey, MetaData
 from sqlalchemy import Column, Integer, String
@@ -15,8 +17,8 @@ def encrypt(data, encryption_key):
 
 
 # Function that generates encryption key
-def generate_key():
-    key = Fernet.generate_key()
+def generate_pinkey():
+    key = pyotp.random_base32()
     return key
 
 
@@ -156,13 +158,13 @@ def init_db():
     db.create_all()
     patient = User(firstname='John', lastname='Smith', gender='male', birthdate=datetime(1999,5,9), role='patient',
                    nhs_number='1234567891', phone='6909876712', email='jsmith@email.com', password='123123',
-                   encryption_key=generate_key(), street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
+                   encryption_key=generate_pinkey(), street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
     doctor = User(firstname='Mathew', lastname='Anderson', gender='Male', birthdate=datetime(1998,3,4), role='doctor',
                   nhs_number=None, phone='8909887890', email='manderson@hospital.com', password='77887788',
-                  encryption_key=generate_key(), street='North 29', postcode='NE78RE', city='Newcastle')
+                  encryption_key=generate_pinkey(), street='North 29', postcode='NE78RE', city='Newcastle')
     admin = User(firstname='Alice', lastname='Smith', gender='Female', birthdate=datetime(1999, 5, 4), role='admin',
                  nhs_number=None, phone='8909887891', email='admin@email.com', password='123123',
-                 encryption_key=generate_key(), street='South 29', postcode='NE24DF', city='Newcastle')
+                 encryption_key=generate_pinkey(), street='South 29', postcode='NE24DF', city='Newcastle')
     hospital = Hospital(name='General Hospital', street='South 23', postcode='NE24DF', city='Newcastle')
     hospital2 = Hospital(name='Victoria Hospital', street='North 40', postcode='NE25DF', city='Newcastle')
     medicine = Medicine(name='PainkillerOmega', type='painkiller', dosage=30)
