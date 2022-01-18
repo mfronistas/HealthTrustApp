@@ -1,15 +1,14 @@
-# File that includes the functions of appointment
+"""Module that includes functions for appointments"""
 # IMPORTS
-from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 import datetime
-from datetime import time
-from flask_mail import Mail, Message
-from app import db, requires_roles, mail
+from flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask_mail import Message
 from flask_login import login_required, current_user
+from app import db, requires_roles, mail
 from models import Appointment, User, Hospital, Medicine, Prescription
-# CONFIG
 from users.forms import AppointmentForm, PrescriptionForm, UpdateNotesForm
 
+# CONFIG
 appointment_blueprint = Blueprint('appointment', __name__, template_folder='templates')
 
 
@@ -19,6 +18,7 @@ appointment_blueprint = Blueprint('appointment', __name__, template_folder='temp
 @requires_roles('doctor', 'patient')
 @login_required
 def appointment():
+    """Method for viewing and canceling appointments for patient and doctor"""
 
     cancel = request.form.get('valuecancel')
 
@@ -42,21 +42,23 @@ def appointment():
     elif current_user.role == 'doctor':
         if cancel:
 
-            appointment = Appointment.query.filter_by(id=cancel).first()
-            user = User.query.filter_by(id=appointment.patient_id).first()
+            appoint = Appointment.query.filter_by(id=cancel).first()
+            user = User.query.filter_by(id=appoint.patient_id).first()
             email = user.email
-            date = appointment.date
-            doctor = User.query.filter_by(id=appointment.doctor_id).first()
+            date = appoint.date
+            doctor = User.query.filter_by(id=appoint.doctor_id).first()
             phone = doctor.phone
 
             try:
-                msg = Message(subject='Health Trust Appointment Canceled', sender='healthtrust.contact@gmail.com',
+                msg = Message(subject='Health Trust Appointment Canceled',
+                              sender='healthtrust.contact@gmail.com',
                               recipients=[email])
                 msg.body = 'Appointment Date: {date}  \n' \
                            'Canceled by the doctor\n' \
-                           'Please contact Dr.{doctor} using this number {phone}'.format(date=date,
-                                                                                      doctor=doctor.lastname,
-                                                                                      phone=phone)
+                           'Please contact Dr.{doctor} using ' \
+                           'this number {phone}'.format(date=date,
+                                                        doctor=doctor.lastname,
+                                                        phone=phone)
                 mail.send(msg)
                 Appointment.query.filter_by(id=cancel).delete()
                 db.session.commit()
@@ -68,11 +70,13 @@ def appointment():
                 raise Exception('Appointment not in database')
 
         return render_template('appointments.html',
-                               appointments=Appointment.query.filter_by(doctor_id=current_user.id, notes='pending')
+                               appointments=Appointment.query.filter_by(doctor_id=current_user.id,
+                                                                        notes='pending')
                                .order_by(Appointment.date.asc(), Appointment.time.asc()),
                                patients=User.query.filter_by(role='patient'),
                                hospitals=Hospital.query.all(),
-                               old_appointments=Appointment.query.filter(Appointment.notes != 'pending'))
+                               old_appointments=Appointment.query.filter(Appointment.notes !=
+                                                                         'pending'))
 
 
 
@@ -80,13 +84,14 @@ def appointment():
 @login_required
 @requires_roles('patient', 'doctor')
 def book_appointment():
+    """Method to book a new appointment for a patient"""
     # Get all hospitals from database to add them to dropdown list in html page
     hospitals = Hospital.query.all()
     times = timeslots()
     # create appointment form object
     form = AppointmentForm()
-    x = request.form.get('location')
-    site = Hospital.query.filter_by(name=x).first()
+    get_location = request.form.get('location')
+    site = Hospital.query.filter_by(name=get_location).first()
     # Time of appointment
     booking_time = request.form.get('book')
 
@@ -102,35 +107,45 @@ def book_appointment():
         # if no slots remain in the list
         if not times:
             flash('Current date is fully booked', 'error')
-            return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
+            return render_template('book.html', form=form,
+                                   hospitals=hospitals, slotList=False, timeslots=times)
 
         # If user has booked another appointment for the same date
-        if Appointment.query.filter_by(patient_id=current_user.id, date=form.date.data).first():
+        if Appointment.query.filter_by(patient_id=current_user.id,
+                                       date=form.date.data).first():
             flash('Appointment already booked for specific date')
-            return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
+            return render_template('book.html', form=form, hospitals=hospitals,
+                                   slotList=False, timeslots=times)
         # If n isnt none, so the time the book button is pressed
         if booking_time:
             # Create new appointment and add it to the database
             booking_time = datetime.datetime.strptime(booking_time, '%H:%M:%S')
             booking_time = booking_time.time()
-            new_appointment = Appointment(current_user.id, findDoctor(form.date.data, booking_time).id,
-                                          form.date.data, booking_time, notes='pending', site_id=site.id)
+            new_appointment = Appointment(current_user.id,
+                                          findDoctor(form.date.data, booking_time).id,
+                                          form.date.data, booking_time,
+                                          notes='pending', site_id=site.id)
             db.session.add(new_appointment)
             db.session.commit()
             flash('Appointment Booked!')
 
             # After booking an appointment redirect to view appointment page
             return redirect(url_for('appointment.appointment'))
-        return render_template('book.html', form=form, hospitals=hospitals, slotList=True, timeslots=times)
+        return render_template('book.html', form=form, hospitals=hospitals,
+                               slotList=True, timeslots=times)
 
     # if request method is GET or form not valid re-render booking page
-    return render_template('book.html', form=form, hospitals=hospitals, slotList=False, timeslots=times)
+    return render_template('book.html', form=form, hospitals=hospitals,
+                           slotList=False, timeslots=times)
 
 
 @appointment_blueprint.route('/appointmentview', methods=['POST', 'GET'])
 @login_required
 @requires_roles('patient', 'doctor')
 def view_appointment():
+    """Method to view an appointment details for patient and doctor,
+    doctor is also able to start the appointment, add prescriptions
+    and finish appointment"""
     form = PrescriptionForm()
     form2 = UpdateNotesForm()
     date = request.form.get("view-date")
@@ -165,14 +180,18 @@ def view_appointment():
         db.session.commit()
         form2.notes.data = ''
     prescriptions = Prescription.query.filter_by(appointment_id=appointment_id).all()
-    return render_template('appointmentview.html', date=date, time=appointment_time, prescriptions=prescriptions,
-                           patient=patient, doctor=doctor, hospital=hospital, patient_data=patient_data,
+    return render_template('appointmentview.html', date=date, time=appointment_time,
+                           prescriptions=prescriptions,
+                           patient=patient, doctor=doctor, hospital=hospital,
+                           patient_data=patient_data,
                            medicine=medicines, form=form, form2=form2,
                            patient_id=patient_id, appointment_id=appointment_id)
 
 
 # Method to create timeslots and add them to a list
 def timeslots() -> list:
+    """Method to generate and return a list of timeslots given a starting time,
+     ending time and slot length"""
     start_time = '9:00'
     end_time = '18:00'
     slot_time = 15
@@ -190,6 +209,8 @@ def timeslots() -> list:
 
 # Method to find available doctor and assign him to appointment
 def findDoctor(date, time) -> User:
+    """Method to find an available doctor to assign to a new appointment by
+     checking which doctor has the least appointments for the day and assigning to them"""
     # Value to hold least amount of appointments
     min_appointments = -1
     # Variable to hold lowest appointment doctor

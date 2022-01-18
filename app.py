@@ -1,4 +1,5 @@
-""" App.py """
+""" This module includes the main method of the application,
+ error pages routing and home page route """
 # IMPORTS
 from functools import wraps
 import logging

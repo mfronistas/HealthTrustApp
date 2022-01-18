@@ -1,14 +1,14 @@
+"""This module holds all the user functions
+for roles patient and doctor"""
 # IMPORTS
 import logging
 from datetime import datetime
 from random import randint
-from functools import wraps
 from werkzeug.security import check_password_hash, generate_password_hash
 import pyotp
-from flask_mail import Mail, Message
+from flask_mail import Message
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
-from flask_mail import Mail
 from app import db, requires_roles, mail
 from models import User, generate_pinkey, Prescription, Appointment, Medicine
 from users.forms import RegisterForm, LoginForm, ContactForm, RecoveryForm
@@ -22,13 +22,14 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 # view registration
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
+    """Method to register a new patient"""
     # create signup form object
     form = RegisterForm()
 
     # if request method is POST or form is valid
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        nhsNr = User.query.filter_by(nhs_number=form.nhs_number.data).first()
+        nhs_num = User.query.filter_by(nhs_number=form.nhs_number.data).first()
         # if this returns a user, then the email or NHS number already exists in database
 
         # if email or NHS number already exists redirect user
@@ -36,7 +37,7 @@ def register():
         if user:
             flash('Email address already exists', 'error')
             return render_template('register.html', form=form)
-        if nhsNr:
+        if nhs_num:
             flash('This NHS number has already been used', 'error')
             return render_template('register.html', form=form)
 
@@ -52,18 +53,17 @@ def register():
                         postcode=form.postcode.data,
                         city=form.city.data,
                         email=form.email.data,
-                        password=form.password.data,
-                        encryption_key=generate_pinkey()
-                        )
+                        password=form.password.data)
 
         # add the new user to the database
         db.session.add(new_user)
         db.session.commit()
-        logging.warning('SECURITY - User registration [%s, %s]', form.email.data, request.remote_addr)
+        logging.warning('SECURITY - User registration [%s, %s]', form.email.data,
+                        request.remote_addr)
 
         # Send email to new user created to set up 2 factor authenticator
-
-        msg = Message(subject='Activate 2 Factor Authentication', sender='healthtrust.contact@gmail.com',
+        msg = Message(subject='Activate 2 Factor Authentication',
+                      sender='healthtrust.contact@gmail.com',
                       recipients=[new_user.email])
         msg.body = 'PIN Key: {pinkey}\n\n' \
                    'For Account: {email}\n\n' \
@@ -73,8 +73,8 @@ def register():
                    '3) Enter your PIN key\n\n' \
                    '4) Enter name for new account\n\n' \
                    '5) Select token length of 6\n\n' \
-                   '6) Use the generated codes to log in your account'.format(email=new_user.email,
-                                                                              pinkey=new_user.encryption_key)
+                   '6) Use the generated codes to log in your account'\
+                    .format(email=new_user.email, pinkey=new_user.encryption_key)
         mail.send(msg)
 
         # sends user to login page
@@ -86,6 +86,9 @@ def register():
 # Login user
 @users_blueprint.route('/login', methods=['POST', 'GET'])
 def login():
+    """Method so all users can log in the application using email, password and pinkey
+    in order to access functions depending on their roles,
+    failed log in attempts are monitored and if too many user cant log in"""
 
     # if session attribute logins doesnt exist create new attribute logins
     if not session.get('logins'):
@@ -111,13 +114,15 @@ def login():
                                 request.remote_addr)
 
             elif session['logins'] == 2:
-                flash('Please check your login details and try again. 1 login attempt remaining', 'error')
+                flash('Please check your login details and try again.'
+                      ' 1 login attempt remaining', 'error')
                 # Security warning for when a user tries to log in 2 times unsuccessfully
                 logging.warning('SECURITY - Log in attempt 2[%s, %s]', form.email.data,
                                 request.remote_addr)
 
             elif session['logins'] == 1:
-                flash('Please check your login details and try again. 2 login attempt remaining', 'error')
+                flash('Please check your login details and '
+                      'try again. 2 login attempt remaining', 'error')
                 # Security warning for when a user tries to log in once unsuccessfully
                 logging.warning('SECURITY - Log in attempt 1[%s, %s]', form.email.data,
                                 request.remote_addr)
@@ -161,14 +166,15 @@ def login():
 # Contact us emailing system
 @users_blueprint.route('/contactus', methods=['POST', 'GET'])
 def contact_us():
+    """Method to send an enquiry to the trust
+     using the contact us page"""
     # create contact form object
     form = ContactForm()
     # if request method is POST or form is valid
     if form.validate_on_submit():
         # msg is emailed to admin
-        #TODO change email to an admin email
         msg = Message(subject=form.subject.data, sender='healthtrust.contact@gmail.com',
-                      recipients=['ackermandlevi@gmail.com'])
+                      recipients=['healthtrust.contact@gmail.com'])
         msg.body = 'CONTACT US ENQUIRY\n' \
                    'BY: {email}\n' \
                    'Message: {message}'.format(email=form.email.data, message=form.message.data)
@@ -182,7 +188,9 @@ def contact_us():
 @users_blueprint.route('/logout')
 @login_required
 def logout():
-    logging.warning('SECURITY - Log out [%s, %s, %s]', current_user.id, current_user.email, request.remote_addr)
+    """Method to log out the current user"""
+    logging.warning('SECURITY - Log out [%s, %s, %s]',
+                    current_user.id, current_user.email, request.remote_addr)
     logout_user()
     return redirect(url_for('index'))
 
@@ -192,6 +200,8 @@ def logout():
 @login_required
 @requires_roles('doctor', 'patient')
 def view_prescriptions():
+    """Method to view prescriptions for patient and doctor,
+     doctor is able to delete prescriptions"""
     prescriptions = []
     cancel = request.form.get('valuecancel')
     all_appointments = Appointment.query.all()
@@ -219,7 +229,8 @@ def view_prescriptions():
             if prescription is not None:
                 prescriptions.append(prescription)
 
-    return render_template('prescriptionview.html', prescriptions=prescriptions, meds=meds, patients=patients,
+    return render_template('prescriptionview.html', prescriptions=prescriptions,
+                           meds=meds, patients=patients,
                            appointments=all_appointments)
 
 
@@ -227,6 +238,8 @@ def view_prescriptions():
 @users_blueprint.route('/account', methods=['POST', 'GET'])
 @login_required
 def account():
+    """Method to show the user his account information when logging in,
+     and also help him update his information"""
     update = request.form.get('update_details')
     if update:
         form = RegisterForm()
@@ -276,6 +289,8 @@ def account():
 # User recover password
 @users_blueprint.route('/accountrecovery', methods=['POST', 'GET'])
 def recover():
+    """ Method that helps the user recover their
+     account in case of a forgotten password"""
     email = request.form.get('email')
     step2 = request.form.get('step2')
     if request.form.get('step1'):
@@ -287,14 +302,16 @@ def recover():
             security_code = randint(range_start, range_end)
             current_code = security_code
             # security code is emailed to user
-            msg = Message(subject='Health Trust Account Recovery', sender='healthtrust.contact@gmail.com',
+            msg = Message(subject='Health Trust Account Recovery',
+                          sender='healthtrust.contact@gmail.com',
                           recipients=[email])
             msg.body = 'Account recovery \n' \
                        'For: {email}\n' \
                        'Security Code: {message}'.format(email=email, message=str(current_code))
             mail.send(msg)
             flash('Account recovery code sent, please check your email')
-            return render_template('password.html', step1=True, step2=False, cur_code=current_code, cur_email=email)
+            return render_template('password.html', step1=True, step2=False,
+                                   cur_code=current_code, cur_email=email)
         # If email doesnt exist
         else:
             flash('Email provided is incorrect', 'error')
@@ -313,28 +330,28 @@ def recover():
                 user = User.query.filter_by(email=email).first()
                 user.password = generate_password_hash(form.password.data)
                 db.session.commit()
-                logging.warning('SECURITY - Account Recovered [%s, %s, %s]', current_user.id, current_user.email)
+                logging.warning('SECURITY - Account Recovered [%s, %s]',
+                                current_user.id, current_user.email)
                 return redirect(url_for('users.login'))
 
-            return render_template('password.html', form=form, step1=False, step2='1', cur_email=email,
+            return render_template('password.html', form=form, step1=False,
+                                   step2='1', cur_email=email,
                                    cur_code=sec_code, code=code)
         else:
             flash('Invalid Code', 'error')
-            return render_template('password.html', step1=True, step2=False, cur_email=email, cur_code=sec_code)
+            return render_template('password.html', step1=True,
+                                   step2=False, cur_email=email, cur_code=sec_code)
 
     return render_template('password.html', step1=False, step2=False)
 
 
-@users_blueprint.route('/covid')
-def covid():
-    return render_template('covid.html')
-
-
 @users_blueprint.route('/faqs')
 def faqs():
+    """Method to return the FAQs page"""
     return render_template('faqs.html')
 
 
 @users_blueprint.route('/accessibility')
 def accessibility():
+    """Method to return the Accessibility statement"""
     return render_template('accessibility.html')
