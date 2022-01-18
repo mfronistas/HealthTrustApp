@@ -42,7 +42,7 @@
                 <td>{{ med.name }}</td>
                 {% endif %}
                 {% endfor %}
-                <td>{{ prescription.instructions}}</td>
+            <td>{{ prescription.instructions}}</td>
         </tr>
     {% endfor %}
 {% endif %}
@@ -53,8 +53,7 @@
         <th scope="col">#</th>
         <th scope="col">Medicine</th>
         <th scope="col">Instructions</th>
-        <th> </th>
-        <th> </th>
+        <th scope="col">Name</th>
 
     </tr>
   </thead>
@@ -69,7 +68,15 @@
                 <td>{{ med.name }}</td>
                 {% endif %}
                 {% endfor %}
-                <td>{{ prescription.instructions}}</td>
+            <td>{{ prescription.instructions}}</td>
+            {% for appointment in appointments %}
+                {% for patient in patients %}
+                    {% if patient.id == appointment.patient_id %}
+                        <td>{{ patient.firstname }} {{ patient.lastname }}</td>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            <td>Name</td>
         <form action="" method="POST">
             <input type="hidden" name="valuecancel" value="{{prescription.id}}">
             <td><button class="btn btn-danger" type="submit" name="cancel" value={{ prescription.id }}>Cancel</button>
