@@ -83,7 +83,7 @@
                 {% if current_user.role == 'patient' %}
                 {% for doc in doctors %}
                     {% if doc.id == appointment.doctor_id %}
-                        <input type="hidden" name="view-doctor" value="Dr {{ current_user.lastname }}">
+                        <input type="hidden" name="view-doctor" value="Dr {{ doc.lastname }}">
                     {% endif %}
                 {% endfor %}
                 <input type="hidden" name="view-patient" value="{{ current_user.firstname }} {{ current_user.lastname }}">
