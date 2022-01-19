@@ -23,8 +23,10 @@ def phone_validation(form, field):
     """Method to check the correct length of a phone number"""
     phonenumber = field.data
     number_amount = number_checker(phonenumber)
-    if number_amount != 11:
-        raise ValidationError(f"Phone number is incorrect")
+    if number_amount < 11:
+        raise  ValidationError(f"Phone number is too short")
+    elif number_amount > 11:
+        raise ValidationError(f"Phone number is too long")
 
 
 # check the amount of numbers in a string
