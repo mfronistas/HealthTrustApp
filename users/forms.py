@@ -19,7 +19,7 @@ def char_validation(form, field):
 
 
 # check if the phone number has enough numbers and correct the format
-def phone_validation(field):
+def phone_validation(form, field):
     """Method to check the correct length of a phone number"""
     phonenumber = field.data
     number_amount = number_checker(phonenumber)
