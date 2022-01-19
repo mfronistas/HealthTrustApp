@@ -39,7 +39,7 @@ def appointment():
                                .order_by(Appointment.date.asc(), Appointment.time.asc()),
                                doctors=User.query.filter_by(role='doctor'),
                                hospitals=Hospital.query.all())
-    elif current_user.role == 'doctor':
+    if current_user.role == 'doctor':
         if cancel:
 
             appoint = Appointment.query.filter_by(id=cancel).first()
@@ -77,6 +77,7 @@ def appointment():
                                hospitals=Hospital.query.all(),
                                old_appointments=Appointment.query.filter(Appointment.notes !=
                                                                          'pending'))
+    return render_template('503.html')
 
 
 
@@ -97,9 +98,9 @@ def book_appointment():
 
     if form.validate_on_submit():
         # Get all appointments in the current date
-        apt = Appointment.query.filter_by(date=form.date.data).all()
+        apts = Appointment.query.filter_by(date=form.date.data).all()
         # if time found is in
-        for apt in apt:
+        for apt in apts:
             if apt.site_id == site.id:
                 if apt.time in times:
                     times.remove(apt.time)
@@ -156,7 +157,6 @@ def view_appointment():
     hospital = request.form.get("view-hospital")
     patient_id = request.form.get("view-id")
     patient_data = User.query.filter_by(id=patient_id).first()
-    medicines = Medicine.query.all()
     medicine = request.form.get('medicine')
     cancel = request.form.get('valuecancel')
     if cancel:
@@ -184,7 +184,7 @@ def view_appointment():
                            prescriptions=prescriptions,
                            patient=patient, doctor=doctor, hospital=hospital,
                            patient_data=patient_data,
-                           medicine=medicines, form=form, form2=form2,
+                           medicine=Medicine.query.all(), form=form, form2=form2,
                            patient_id=patient_id, appointment_id=appointment_id)
 
 

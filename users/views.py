@@ -10,7 +10,7 @@ from flask_mail import Message
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 from app import db, requires_roles, mail
-from models import User, generate_pinkey, Prescription, Appointment, Medicine
+from models import User, Prescription, Appointment, Medicine
 from users.forms import RegisterForm, LoginForm, ContactForm, RecoveryForm
 
 # CONFIG
@@ -73,8 +73,8 @@ def register():
                    '3) Enter your PIN key\n\n' \
                    '4) Enter name for new account\n\n' \
                    '5) Select token length of 6\n\n' \
-                   '6) Use the generated codes to log in your account'\
-                    .format(email=new_user.email, pinkey=new_user.encryption_key)
+                   '6) Use the generated codes to log in your account' \
+            .format(email=new_user.email, pinkey=new_user.encryption_key)
         mail.send(msg)
 
         # sends user to login page
@@ -133,7 +133,6 @@ def login():
                 logging.warning('SECURITY - Log in [%s, %s]', form.email.data,
                                 request.remote_addr)
 
-
             return render_template('login.html', form=form)
 
         # If user 2FA is valid
@@ -148,11 +147,11 @@ def login():
             db.session.add(user)
             db.session.commit()
             logging.warning('SECURITY - Log in [%s, %s, %s]', current_user.id, current_user.email,
-                     request.remote_addr)
+                            request.remote_addr)
             # Redirect to appropriate page according to role
             if current_user.role == 'admin':
                 return redirect(url_for('admin.admin'))
-            elif current_user.role == 'doctor':
+            if current_user.role == 'doctor':
                 return redirect(url_for('appointment.appointment'))
             else:
                 return redirect(url_for('users.account'))
@@ -209,8 +208,8 @@ def view_prescriptions():
     patients = User.query.all()
     if current_user.role == 'patient':
         appointments = Appointment.query.filter_by(patient_id=current_user.id).all()
-        for appoinment in appointments:
-            prescription = Prescription.query.filter_by(appointment_id=appoinment.id).first()
+        for appointment in appointments:
+            prescription = Prescription.query.filter_by(appointment_id=appointment.id).first()
             if prescription is not None:
                 prescriptions.append(prescription)
     elif current_user.role == 'doctor':
@@ -224,8 +223,8 @@ def view_prescriptions():
             except:
                 raise Exception('Prescription not in database')
         appointments = Appointment.query.filter_by(doctor_id=current_user.id).all()
-        for appoinment in appointments:
-            prescription = Prescription.query.filter_by(appointment_id=appoinment.id).first()
+        for appointment in appointments:
+            prescription = Prescription.query.filter_by(appointment_id=appointment.id).first()
             if prescription is not None:
                 prescriptions.append(prescription)
 
