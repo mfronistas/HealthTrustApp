@@ -1,24 +1,49 @@
+"""This module contain all models for database tables,
+pinkey generation method and initialization of the database"""
 # IMPORTS
 from datetime import datetime, date, time
 
 import pyotp
 from flask_login import UserMixin
-from sqlalchemy import ForeignKey, MetaData
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import ForeignKey
+from sqlalchemy import Column
 from app import db
 from werkzeug.security import generate_password_hash
-import base64
-from cryptography.fernet import Fernet
 
 
 # Function that generates encryption key
 def generate_pinkey():
+    """Method to generate pinkey needed in two-factor authorisation
+
+    :return key -- a unique pinkey
+    """
     key = pyotp.random_base32()
     return key
 
 
 # Class User
 class User(db.Model, UserMixin):
+    """A model for the User table
+
+    id -- the id that the User is assigned to in the database
+    firstname -- the firstname of the User
+    lastname -- the lastname of the User
+    gender -- the gender the User identifies with
+    birthdate -- the date when the User has been born
+    role -- the role and permissions assigned to the User. Set to 'patient' by default
+    nhs_number  -- the NHS number of the User
+    phone -- the phone number of the User
+    street -- the street the User lives on
+    postcode -- the postcode of the place the User lives in
+    city -- the city where the User lives
+    email -- the email address of the User
+    password -- the password to access the account
+    encryption_key -- the key assigned to the User account that is used to generate the pinkey
+    registered_on -- the date when the account was registered
+    last_logged_in -- the date when the User's account was last accessed successfully
+    current_logged_in -- the date when the most recent successful logging in happened
+
+    """
     __tablename__ = 'User'
 
     # User information
@@ -70,6 +95,15 @@ class User(db.Model, UserMixin):
 
 # Class Hospital
 class Hospital(db.Model):
+    """A model for the Hospital table
+
+    id -- the id that the Hospital is assigned to in the database
+    name -- the name of the Hospital
+    street -- the street where the Hospital is
+    postcode -- the postcode of the place where the Hospital is
+    city -- the city the Hospital is in
+
+    """
     __tablename__ = 'Hospital'
 
     # Hospital info
@@ -91,6 +125,17 @@ class Hospital(db.Model):
 
 # Class Appointment
 class Appointment(db.Model):
+    """A model for the Appointment table
+
+    id -- the id the Appointment is assigned to in the database
+    patient_id -- the patient that has booked the Appointment
+    doctor_id -- the doctor that will run the Appointment
+    date -- the date of the Appointment
+    time -- the time of the Appointment
+    notes -- the notes about the Appointment
+    site_id -- the Hospital where the Appointment takes place
+
+    """
     __tablename__ = 'Appointment'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -113,6 +158,14 @@ class Appointment(db.Model):
 
 # Class Medicine
 class Medicine(db.Model):
+    """A model for the Medicine table
+
+    id -- the id that the Medicine is assigned to in the database
+    name -- the name of the Medicine
+    type -- the type of the Medicine
+    dosage -- the dosage that the Medicine have
+
+    """
     __tablename__ = 'Medicine'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -129,6 +182,14 @@ class Medicine(db.Model):
 
 # Class Prescription
 class Prescription(db.Model):
+    """A model for the Prescription table
+
+    id -- the id that the Perscription is assigned to in the database
+    medicine_id -- the id of the Medicine used in the Prescription
+    appointment_id -- the id of the Appointment where the Prescription was made
+    instruction -- the instructions on the Prescription made by doctor on how to use the Medicine
+
+    """
     __tablename__ = 'Prescription'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -144,12 +205,14 @@ class Prescription(db.Model):
 
 # Database initialization script
 def init_db():
+    """Initialization of the database tables and initial entries
+    """
     db.drop_all()
     db.create_all()
-    patient = User(firstname='John', lastname='Smith', gender='male', birthdate=datetime(1999,5,9), role='patient',
+    patient = User(firstname='John', lastname='Smith', gender='male', birthdate=datetime(1999, 5, 9), role='patient',
                    nhs_number='1234567891', phone='6909876712', email='jsmith@email.com', password='123123',
                    street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
-    doctor = User(firstname='Mathew', lastname='Anderson', gender='Male', birthdate=datetime(1998,3,4), role='doctor',
+    doctor = User(firstname='Mathew', lastname='Anderson', gender='Male', birthdate=datetime(1998, 3, 4), role='doctor',
                   nhs_number=None, phone='8909887890', email='manderson@hospital.com', password='77887788',
                   street='North 29', postcode='NE78RE', city='Newcastle')
     admin = User(firstname='Alice', lastname='Smith', gender='Female', birthdate=datetime(1999, 5, 4), role='admin',
@@ -169,6 +232,7 @@ def init_db():
 
 # Function to create an appointment.
 def create_appointment():
+    """Manual appointment creation"""
     appointment = Appointment(patient_id=1, doctor_id=2, date=date(2022, 1, 15), time=time(9, 00), notes="", site_id=2)
     db.session.add(appointment)
     db.session.commit()
