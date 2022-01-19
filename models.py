@@ -1,14 +1,16 @@
 """This module contain all models for database tables,
 pinkey generation method and initialization of the database"""
 # IMPORTS
-from datetime import datetime, date, time
+from datetime import datetime
+from datetime import date as d
+from datetime import time as t
 
 import pyotp
 from flask_login import UserMixin
 from sqlalchemy import ForeignKey
 from sqlalchemy import Column
-from app import db
 from werkzeug.security import generate_password_hash
+from app import db
 
 
 # Function that generates encryption key
@@ -72,8 +74,8 @@ class User(db.Model, UserMixin):
     current_logged_in = db.Column(db.DateTime, nullable=True)
 
     # User constructor
-    def __init__(self, firstname, lastname, gender, birthdate, role, nhs_number, phone, street, postcode, city, email,
-                 password):
+    def __init__(self, firstname, lastname, gender, birthdate, role, nhs_number,
+                 phone, street, postcode, city, email, password):
         self.firstname = firstname
         self.lastname = lastname
         self.gender = gender
@@ -209,17 +211,25 @@ def init_db():
     """
     db.drop_all()
     db.create_all()
-    patient = User(firstname='John', lastname='Smith', gender='male', birthdate=datetime(1999, 5, 9), role='patient',
-                   nhs_number='1234567891', phone='6909876712', email='jsmith@email.com', password='123123',
+    patient = User(firstname='John', lastname='Smith',
+                   gender='male', birthdate=datetime(1999, 5, 9),
+                   role='patient', nhs_number='1234567891', phone='6909876712',
+                   email='jsmith@email.com', password='123123',
                    street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
-    doctor = User(firstname='Mathew', lastname='Anderson', gender='Male', birthdate=datetime(1998, 3, 4), role='doctor',
-                  nhs_number=None, phone='8909887890', email='manderson@hospital.com', password='77887788',
+    doctor = User(firstname='Mathew', lastname='Anderson',
+                  gender='Male', birthdate=datetime(1998, 3, 4),
+                  role='doctor', nhs_number=None, phone='8909887890',
+                  email='manderson@hospital.com', password='77887788',
                   street='North 29', postcode='NE78RE', city='Newcastle')
-    admin = User(firstname='Alice', lastname='Smith', gender='Female', birthdate=datetime(1999, 5, 4), role='admin',
-                 nhs_number=None, phone='8909887891', email='admin@email.com', password='123123',
+    admin = User(firstname='Alice', lastname='Smith',
+                 gender='Female', birthdate=datetime(1999, 5, 4),
+                 role='admin', nhs_number=None, phone='8909887891',
+                 email='admin@email.com', password='123123',
                  street='South 29', postcode='NE24DF', city='Newcastle')
-    hospital = Hospital(name='General Hospital', street='South 23', postcode='NE24DF', city='Newcastle')
-    hospital2 = Hospital(name='Victoria Hospital', street='North 40', postcode='NE25DF', city='Newcastle')
+    hospital = Hospital(name='General Hospital', street='South 23',
+                        postcode='NE24DF', city='Newcastle')
+    hospital2 = Hospital(name='Victoria Hospital', street='North 40',
+                         postcode='NE25DF', city='Newcastle')
     medicine = Medicine(name='PainkillerOmega', type='painkiller', dosage=30)
     db.session.add(patient)
     db.session.add(doctor)
@@ -233,6 +243,7 @@ def init_db():
 # Function to create an appointment.
 def create_appointment():
     """Manual appointment creation"""
-    appointment = Appointment(patient_id=1, doctor_id=2, date=date(2022, 1, 15), time=time(9, 00), notes="", site_id=2)
+    appointment = Appointment(patient_id=1, doctor_id=2, date=d(2022, 1, 15),
+                              time=t(9, 00), notes="", site_id=2)
     db.session.add(appointment)
     db.session.commit()
