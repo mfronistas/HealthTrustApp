@@ -9,9 +9,15 @@
 <div class="row align-items-md-stretch padding">
   <div class="col-md-6">
     <div class="h-100 p-5 gray-bg border text-black">
-      <h2>Need to book an appointment with a doctor?</h2>
-      <p>Login to book an appointment or Call your local health centre</p>
-        {% if current_user.is_authenticated %}
+        {% if not current_user.is_authenticated or current_user.role == 'patient' %}
+        <h2>Need to book an appointment with a doctor?</h2>
+        <p>Login to book an appointment or Call your local health centre</p>
+        {% endif %}
+        {% if current_user.is_authenticated and current_user.role != 'patient' %}
+        <h2>Stay healthy and follow covid-19 guidelines</h2>
+        <p>You can prevent the spread and help end this pandemic</p>
+        {% endif %}
+        {% if current_user.is_authenticated and current_user.role == 'patient' %}
         <a class="btn btn-outline-secondary bg-light text-dark" role="button" href="{{ url_for('appointment.book_appointment') }}">Book appointment</a>
         {% endif %}
         {% if not current_user.is_authenticated %}
