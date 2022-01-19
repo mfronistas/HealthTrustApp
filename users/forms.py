@@ -24,14 +24,14 @@ def phone_validation(form, field):
     phonenumber = field.data
     number_amount = number_checker(phonenumber)
     if number_amount < 11:
-        raise  ValidationError(f"Phone number is too short")
-    elif number_amount > 11:
-        raise ValidationError(f"Phone number is too long")
+        raise  ValidationError("Phone number is too short")
+    if number_amount > 11:
+        raise ValidationError("Phone number is too long")
 
 
 # check the amount of numbers in a string
 def number_checker(number):
-    """Method to check all possible numbers"""
+    """Method to check if the numbers in the string are an actual numbers"""
     possible_numbers = "0123456789"
     current_amount = 0
     for char in number:
@@ -46,7 +46,7 @@ class RegisterForm(FlaskForm):
     firstname = StringField(validators=[InputRequired(), char_validation])
     lastname = StringField(validators=[InputRequired(), char_validation])
     gender = SelectField(
-        u'Gender Type',
+        'Gender Type',
         choices=[('Male', 'Male'), ('Female', 'Female'),
                  ('Other', 'Other')], validators=[InputRequired()])
     birthdate = DateField(validators=[InputRequired(), DataRequired()])
@@ -71,8 +71,8 @@ class RegisterForm(FlaskForm):
     def validate_password(self, password):
         """Method to validate a password to follow specific restrictions
          for the purpose of it being secure enough"""
-        p = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
-        if not p.match(self.password.data):
+        password_check = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
+        if not password_check.match(self.password.data):
             raise ValidationError(message="Password must contain at least 1 small letter,"
                                           " 1 capital letter, 1 digit and 1 special character.")
 
@@ -114,7 +114,7 @@ class DoctorForm(FlaskForm):
                                                 message="Password must be "
                                                         "between 6 and 12 characters long.")])
     gender = SelectField(
-        u'Gender Type',
+        'Gender Type',
         choices=[('Male', 'Male'), ('Female', 'Female'),
                  ('Other', 'Other')], validators=[InputRequired()])
     birthdate = DateField(validators=[InputRequired(), DataRequired()])
@@ -127,8 +127,8 @@ class DoctorForm(FlaskForm):
     def validate_password(self, password):
         """Method to validate a password to follow specific restrictions
                  for the purpose of it being secure enough"""
-        p = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
-        if not p.match(self.password.data):
+        password_check = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
+        if not password_check.match(self.password.data):
             raise ValidationError(message="Password must contain at least 1 small letter,"
                                           " 1 capital letter, 1 digit and 1 special character.")
 
@@ -189,7 +189,7 @@ class RecoveryForm(FlaskForm):
     def validate_password(self, password):
         """Method to validate a password to follow specific restrictions
                  for the purpose of it being secure enough"""
-        p = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
-        if not p.match(self.password.data):
+        password_check = re.compile(r'(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W)')
+        if not password_check.match(self.password.data):
             raise ValidationError(message="Password must contain at least 1 small letter,"
                                           " 1 capital letter, 1 digit and 1 special character.")
