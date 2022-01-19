@@ -74,31 +74,31 @@ def index():
 
 # Error pages
 @app.errorhandler(403)
-def page_forbidden():
+def page_forbidden(error):
     """Routing the error 403 template"""
     return render_template('403.html'), 403
 
 
 @app.errorhandler(400)
-def bad_request():
+def bad_request(error):
     """Routing the error 400 template"""
     return render_template('400.html'), 400
 
 
 @app.errorhandler(503)
-def service_unavailable():
+def service_unavailable(error):
     """Routing the error 503 template"""
     return render_template('503.html'), 500
 
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(error):
     """Routing the error 404 template"""
     return render_template('404.html'), 404
 
 
 @app.errorhandler(500)
-def internal_error():
+def internal_error(error):
     """Routing the error 500 template"""
     return render_template('500.html'), 500
 
