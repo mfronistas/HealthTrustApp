@@ -1,11 +1,15 @@
 # Health Trust App
 Software engineering project 2033 - Team 2
 
-### How to run the application succesfully
+### How to run the application successfully
 
-Before running the application please ensure all the requirements (found in the requirements.txt file) are installed.
+1) Download and install Pycharm https://www.jetbrains.com/pycharm/
 
-The application should be run through python rather than flask as this ensures the proper operation of all the app's functions.
+2) Open project in Pycharm and install the requirements from requirements.txt file
+
+3) Create a new Python configuration with the script set to app.py
+
+4) Run the application
 
 ### User Information
 
@@ -37,3 +41,7 @@ To see some features of the programme we recommend creating your own patient and
 **email**: admin@email.com
 **password**: IaTaSoMrU99
 **encryption key**: P5DXTWRQUR6ZLG6WFQSPC7P3D7XDUFDS
+
+
+link to repository: https://github.com/mfronistas/HealthTrustApp
+
