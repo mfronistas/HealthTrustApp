@@ -214,29 +214,34 @@ def init_db():
     patient = User(firstname='John', lastname='Smith',
                    gender='male', birthdate=datetime(1999, 5, 9),
                    role='patient', nhs_number='1234567891', phone='6909876712',
-                   email='jsmith@email.com', password='123123',
+                   email='jsmith@email.com', password='Password123',
                    street='Hawkhill 15', postcode='NE51ER', city='Newcastle')
     doctor = User(firstname='Mathew', lastname='Anderson',
                   gender='Male', birthdate=datetime(1998, 3, 4),
                   role='doctor', nhs_number=None, phone='8909887890',
-                  email='manderson@hospital.com', password='77887788',
+                  email='manderson@hospital.com', password='VerySecure890',
                   street='North 29', postcode='NE78RE', city='Newcastle')
     admin = User(firstname='Alice', lastname='Smith',
                  gender='Female', birthdate=datetime(1999, 5, 4),
                  role='admin', nhs_number=None, phone='8909887891',
-                 email='admin@email.com', password='123123',
+                 email='admin@email.com', password='IaTaSoMrU99',
                  street='South 29', postcode='NE24DF', city='Newcastle')
+    patient.encryption_key = '3GUKRPZJDYM63M4WAEOXJHDW5QBCNRDS'
+    doctor.encryption_key = 'UAPTEYF3HKORWDYMSYHAVCBBSAML6WAX'
+    admin.encryption_key = 'P5DXTWRQUR6ZLG6WFQSPC7P3D7XDUFDS'
     hospital = Hospital(name='General Hospital', street='South 23',
                         postcode='NE24DF', city='Newcastle')
     hospital2 = Hospital(name='Victoria Hospital', street='North 40',
                          postcode='NE25DF', city='Newcastle')
     medicine = Medicine(name='PainkillerOmega', type='painkiller', dosage=30)
+    medicine2 = Medicine(name='Altacet', type='ointment', dosage=10)
     db.session.add(patient)
     db.session.add(doctor)
     db.session.add(admin)
     db.session.add(hospital)
     db.session.add(hospital2)
     db.session.add(medicine)
+    db.session.add(medicine2)
     db.session.commit()
 
 

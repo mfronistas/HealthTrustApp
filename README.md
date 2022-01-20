@@ -16,16 +16,16 @@ The admin user is used to manage permissions across the site and view security l
 To see some features of the programme we recommend creating your own patient and doctor user using the built-in features in the software as some features of the site require accounts with real email addresses (e.g. Password Reset, Adding Doctors, Adding Users and Contact Us.)
 
 PATIENT ACCOUNT LOGIN DETAILS:
-email:
-password:
-encryption key:
+email: jsmith@email.com
+password: Password123
+encryption key: 3GUKRPZJDYM63M4WAEOXJHDW5QBCNRDS
 
 DOCTOR ACCOUNT LOGIN DETAILS:
-email:
-password:
-encryption key:
+email: manderson@hospital.com
+password: VerySecure890
+encryption key: UAPTEYF3HKORWDYMSYHAVCBBSAML6WAX
 
 ADMIN ACCOUNT LOGIN DETAILS:
-email:
-password:
-encryption key:
+email: admin@email.com
+password: IaTaSoMrU99
+encryption key: P5DXTWRQUR6ZLG6WFQSPC7P3D7XDUFDS
