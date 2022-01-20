@@ -92,7 +92,6 @@ def add_doctor():
     return render_template('adddoctor.html', form=form, add_doc=True)
 
 
-
 # Method to view all medicines
 @admin_blueprint.route('/view_all_medicine', methods=['POST', 'GET'])
 @login_required
